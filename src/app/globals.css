@@ -1,0 +1,41 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap");
+
+:root {
+  --background:
+    radial-gradient(circle at top left, #fef3c7 0, transparent 28%),
+    radial-gradient(circle at 85% 12%, #dbeafe 0, transparent 24%),
+    linear-gradient(180deg, #fffaf2 0%, #eef2ff 48%, #f8fafc 100%);
+  --foreground: #111827;
+  --muted: #475569;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Outfit", "Noto Sans JP", "Hiragino Sans", Meiryo, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: rgba(245, 158, 11, 0.3);
+}
