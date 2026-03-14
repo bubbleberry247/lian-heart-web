@@ -1,0 +1,17 @@
+
+> lian-heart-web@0.1.0 dev
+> next dev
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://100.81.50.28:3000
+
+✓ Starting...
+Creating turbopack project {
+  dir: 'C:\\ProgramData\\Generative AI\\Github\\Lian-Heart_web',
+  testMode: true
+}
+✓ Ready in 494ms
+ GET / 200 in 428ms (compile: 261ms, render: 167ms)
+ GET / 200 in 93ms (compile: 3ms, render: 90ms)
+^C^C

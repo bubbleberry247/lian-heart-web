@@ -1,97 +1,307 @@
 .page {
-  width: min(1120px, calc(100vw - 48px));
+  width: min(1160px, calc(100vw - 32px));
   margin: 0 auto;
-  padding: 64px 0 96px;
+  padding: 16px 0 96px;
+}
+
+.header,
+.hero,
+.section,
+.footer {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+.header {
+  position: sticky;
+  top: 12px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px 22px;
+  margin-bottom: 18px;
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.logo {
+  font-size: 1.18rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  color: var(--heading);
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px 18px;
+}
+
+.nav a,
+.footerLinks a {
+  font-size: 0.94rem;
+  text-decoration: none;
+  color: var(--heading);
+  opacity: 0.82;
+}
+
+.nav a:hover,
+.footerLinks a:hover {
+  opacity: 1;
 }
 
 .hero {
   position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.92fr);
+  gap: 32px;
+  align-items: center;
+  padding: 32px;
   overflow: hidden;
-  padding: 48px;
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  border-radius: 36px;
-  background:
-    radial-gradient(circle at top left, rgba(255, 210, 163, 0.9), transparent 35%),
-    linear-gradient(140deg, rgba(8, 47, 73, 0.96), rgba(23, 37, 84, 0.9));
-  color: #f8fafc;
-  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.18);
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-soft) 100%);
 }
 
-.hero::after {
+.hero::before {
   content: "";
   position: absolute;
-  inset: auto -60px -80px auto;
-  width: 280px;
-  height: 280px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  filter: blur(8px);
+  top: -88px;
+  right: 260px;
+  width: 220px;
+  height: 220px;
+  background: var(--surface-soft);
+  border-radius: 24px;
+}
+
+.heroBody {
+  position: relative;
+  z-index: 1;
 }
 
 .eyebrow,
-.cardLabel,
-.panelLabel {
-  margin: 0 0 12px;
-  font-size: 0.82rem;
+.sectionLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  font-size: 0.88rem;
   font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+
+.eyebrow::before,
+.sectionLabel::before {
+  content: "";
+  width: 34px;
+  height: 1px;
+  background: currentColor;
+}
+
+.infoLabel {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--heading);
 }
 
 .hero h1 {
-  max-width: 12ch;
   margin: 0;
-  font-size: clamp(2.8rem, 8vw, 5.8rem);
-  line-height: 0.96;
-  letter-spacing: -0.04em;
+  max-width: 12ch;
+  font-size: clamp(2.25rem, 4.8vw, 4.15rem);
+  line-height: 1.28;
+  letter-spacing: -0.03em;
+  color: var(--heading);
 }
 
 .lead {
   max-width: 52rem;
-  margin: 24px 0 0;
-  font-size: 1.08rem;
-  line-height: 1.9;
-  color: rgba(248, 250, 252, 0.88);
+  margin: 20px 0 0;
+  font-size: 1.02rem;
+  line-height: 1.95;
+  color: var(--text);
 }
 
-.actions {
+.highlightList {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 10px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.highlightList li {
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: 0.94rem;
+  font-weight: 700;
+  color: var(--heading);
+}
+
+.actions,
+.ctaStack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
   margin-top: 28px;
 }
 
 .primaryAction,
-.secondaryAction {
+.secondaryAction,
+.ghostAction,
+.submitButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 48px;
-  padding: 0 20px;
-  border-radius: 999px;
+  min-height: 52px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 0.98rem;
   font-weight: 700;
   text-decoration: none;
   transition:
     transform 160ms ease,
-    background-color 160ms ease,
-    color 160ms ease,
+    opacity 160ms ease,
     border-color 160ms ease;
 }
 
-.primaryAction {
-  background: #f59e0b;
-  color: #111827;
+.primaryAction,
+.submitButton {
+  background: var(--accent);
+  color: var(--heading);
+  border-color: var(--accent);
 }
 
 .secondaryAction {
-  border: 1px solid rgba(255, 255, 255, 0.36);
-  color: #f8fafc;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--cta-line);
+  color: #ffffff;
+  border-color: var(--cta-line);
+}
+
+.ghostAction {
+  background: var(--surface);
+  color: var(--heading);
+  border-color: var(--line);
 }
 
 .primaryAction:hover,
-.secondaryAction:hover {
-  transform: translateY(-2px);
+.secondaryAction:hover,
+.ghostAction:hover,
+.submitButton:hover {
+  transform: translateY(-1px);
+  opacity: 0.96;
+}
+
+.visualCard {
+  position: relative;
+  min-height: 320px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background-color: var(--surface);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.visualCard::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 38%;
+  background: linear-gradient(180deg, rgba(12, 28, 31, 0), rgba(12, 28, 31, 0.18));
+}
+
+.heroVisual {
+  min-height: 100%;
+  background-image: url("/images/hero-care.jpg");
+  box-shadow: 18px 18px 0 0 var(--surface-soft);
+}
+
+.conceptVisual {
+  background-image: url("/images/consultation-family.jpg");
+  box-shadow: -16px 16px 0 0 var(--surface-soft);
+}
+
+.section {
+  margin-top: 22px;
+  padding: 40px 32px;
+  overflow: hidden;
+}
+
+#concept,
+#greeting,
+#contact {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-soft-strong) 100%);
+}
+
+#menu {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-soft) 100%);
+}
+
+.sectionHeader {
+  max-width: 760px;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  font-size: clamp(1.95rem, 3.8vw, 2.9rem);
+  line-height: 1.36;
+  color: var(--heading);
+}
+
+.sectionHeader p:last-child {
+  margin: 14px 0 0;
+  line-height: 1.9;
+  color: var(--text);
+}
+
+.splitPanel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 0.92fr);
+  gap: 28px;
+  align-items: center;
+  margin-top: 28px;
+}
+
+.copyBlock {
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.copyBlock p,
+.card p,
+.flowCard p,
+.faqItem p,
+.companyGrid p,
+.footerCopy,
+.formIntro p {
+  margin: 0;
+  line-height: 1.9;
+  color: var(--text);
+}
+
+.copyLead,
+.personMeta,
+.urgentMessage,
+.footerCopyright {
+  margin: 0;
+  line-height: 1.9;
+  color: var(--heading);
+  font-weight: 700;
+}
+
+.urgentMessage {
+  margin-top: 12px;
 }
 
 .cardGrid {
@@ -102,58 +312,448 @@
 }
 
 .card,
-.panel {
-  padding: 28px;
-  border: 1px solid rgba(148, 163, 184, 0.22);
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.82);
-  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.08);
-  backdrop-filter: blur(18px);
+.flowCard,
+.companyCard,
+.contactCard,
+.formCard {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
 }
 
-.card h2,
-.panel h2 {
-  margin: 0;
-  font-size: 1.45rem;
-}
-
-.card p:last-child,
-.list {
-  margin: 14px 0 0;
-  line-height: 1.85;
-  color: var(--muted);
-}
-
-.panel {
+.card {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  gap: 24px;
-  margin-top: 18px;
+  align-content: start;
+  overflow: hidden;
 }
 
-.list {
-  padding-left: 1.2rem;
+#pride .card::before,
+#facility .card::before {
+  content: "";
+  display: block;
+  aspect-ratio: 16 / 10;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-.list li + li {
-  margin-top: 10px;
+#pride .card:nth-child(1)::before {
+  background-image: url("/images/consultation-family.jpg");
+}
+
+#pride .card:nth-child(2)::before {
+  background-image: url("/images/care-team.jpg");
+}
+
+#pride .card:nth-child(3)::before {
+  background-image: url("/images/facility-room.jpg");
+}
+
+#facility .card:nth-child(1)::before {
+  background-image: url("/images/facility-room.jpg");
+}
+
+#facility .card:nth-child(2)::before {
+  background-image: url("/images/senior-home.jpg");
+}
+
+#facility .card:nth-child(3)::before {
+  background-image: url("/images/care-team.jpg");
+}
+
+#facility .card:nth-child(4)::before {
+  background-image: url("/images/consultation-family.jpg");
+}
+
+.card h3,
+.card p {
+  padding-inline: 22px;
+}
+
+.card h3 {
+  margin: 18px 0 10px;
+  font-size: 1.18rem;
+  line-height: 1.5;
+  color: var(--heading);
+}
+
+.card p {
+  padding-bottom: 24px;
+}
+
+.flowGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 28px;
+  counter-reset: flow;
+}
+
+.flowCard {
+  position: relative;
+  padding: 24px 22px 22px 72px;
+  counter-increment: flow;
+}
+
+.flowCard:nth-child(even) {
+  background: var(--surface-soft-strong);
+}
+
+.flowCard::before {
+  content: counter(flow, decimal-leading-zero);
+  position: absolute;
+  top: 24px;
+  left: 22px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--heading);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.flowCard h3,
+.formIntro h3 {
+  margin: 0 0 10px;
+  font-size: 1.14rem;
+  line-height: 1.5;
+  color: var(--heading);
+}
+
+.portraitCard {
+  min-height: 420px;
+  background-image: url("/images/director-portrait.jpg");
+  background-position: center top;
+  box-shadow: -16px 16px 0 0 var(--surface-soft);
+}
+
+.faqList {
+  display: grid;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.faqItem {
+  border-radius: 0;
+  border: 0;
+  background: var(--surface-soft);
+  overflow: hidden;
+}
+
+.faqItem summary {
+  position: relative;
+  cursor: pointer;
+  padding: 22px 52px 22px 58px;
+  font-size: 1rem;
+  font-weight: 700;
+  list-style: none;
+  color: var(--heading);
+}
+
+.faqItem summary::before {
+  content: "Q";
+  position: absolute;
+  left: 24px;
+  color: var(--accent);
+  font-weight: 900;
+}
+
+.faqItem summary::after {
+  content: "+";
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: var(--heading);
+}
+
+.faqItem[open] summary::after {
+  content: "-";
+}
+
+.faqItem summary::-webkit-details-marker {
+  display: none;
+}
+
+.faqItem p {
+  padding: 0 24px 22px 58px;
+  border-top: 1px solid var(--surface);
+}
+
+.companyCard {
+  padding: 0;
+  overflow: hidden;
+}
+
+.companyGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.companyGrid > div {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.companyGrid > div:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+.companyGrid a {
+  text-decoration: none;
+  color: var(--heading);
+}
+
+.sampleNote {
+  margin: 18px 22px 22px;
+  line-height: 1.8;
+  color: var(--text);
+}
+
+.contactLayout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr);
+  gap: 20px;
+  align-items: stretch;
+  margin-top: 28px;
+}
+
+.contactCard {
+  display: grid;
+  gap: 20px;
+  padding: 24px;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-soft) 100%);
+}
+
+.contactCard::after {
+  content: "";
+  display: block;
+  min-height: 220px;
+  border-radius: 12px;
+  background: url("/images/hand-support.jpg") center / cover no-repeat;
+}
+
+.ctaStack {
+  margin-top: 0;
+  flex-direction: column;
+}
+
+.ctaStack a {
+  width: 100%;
+}
+
+.formCard {
+  padding: 28px;
+}
+
+.formIntro {
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field span {
+  font-size: 0.94rem;
+  font-weight: 700;
+  color: var(--heading);
+}
+
+.fieldCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--heading);
+  font-weight: 700;
+}
+
+.fieldCheckbox input {
+  width: 18px;
+  height: 18px;
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--heading);
+  font: inherit;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--field-ghost);
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.formMessage {
+  margin: 0 0 14px;
+  padding: 12px 16px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  background: var(--surface-soft);
+  color: var(--heading);
+}
+
+.submitButton {
+  width: 100%;
+  cursor: pointer;
+}
+
+.footer {
+  display: grid;
+  gap: 18px;
+  margin-top: 22px;
+  padding: 28px 32px;
+}
+
+.footerCopy {
+  margin-top: 12px;
+}
+
+.footerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 1080px) {
+  .cardGrid,
+  .flowGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 900px) {
   .page {
-    width: min(100vw - 24px, 1120px);
-    padding: 20px 0 72px;
+    width: min(100vw - 20px, 1160px);
+    padding: 10px 0 72px;
+  }
+
+  .header {
+    position: static;
   }
 
   .hero,
-  .card,
-  .panel {
-    padding: 24px;
-    border-radius: 24px;
+  .splitPanel,
+  .contactLayout,
+  .companyGrid {
+    grid-template-columns: 1fr;
   }
 
+  .header,
+  .hero,
+  .section,
+  .footer,
+  .formCard,
+  .contactCard {
+    padding: 24px;
+  }
+
+  .heroVisual {
+    order: -1;
+    min-height: 320px;
+    box-shadow: 0 14px 0 0 var(--surface-soft);
+  }
+
+  .conceptVisual,
+  .portraitCard {
+    box-shadow: 0 14px 0 0 var(--surface-soft);
+  }
+
+  .hero h1 {
+    max-width: none;
+  }
+
+  .companyGrid > div:nth-last-child(-n + 2) {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .companyGrid > div:last-child {
+    border-bottom: 0;
+  }
+}
+
+@media (max-width: 640px) {
   .cardGrid,
-  .panel {
+  .flowGrid {
     grid-template-columns: 1fr;
+  }
+
+  .nav,
+  .footerLinks {
+    gap: 10px 14px;
+  }
+
+  .actions,
+  .ctaStack {
+    flex-direction: column;
+  }
+
+  .actions a,
+  .submitButton {
+    width: 100%;
+  }
+
+  .hero,
+  .section,
+  .footer {
+    padding: 22px 18px;
+  }
+
+  .card h3,
+  .card p,
+  .sampleNote {
+    padding-inline: 18px;
+  }
+
+  .card p {
+    padding-bottom: 20px;
+  }
+
+  .flowCard {
+    padding: 22px 18px 20px 66px;
+  }
+
+  .faqItem summary {
+    padding: 18px 44px 18px 48px;
+  }
+
+  .faqItem p {
+    padding: 0 18px 18px 48px;
   }
 }

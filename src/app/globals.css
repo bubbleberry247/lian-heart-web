@@ -1,12 +1,17 @@
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap");
 
 :root {
-  --background:
-    radial-gradient(circle at top left, #fef3c7 0, transparent 28%),
-    radial-gradient(circle at 85% 12%, #dbeafe 0, transparent 24%),
-    linear-gradient(180deg, #fffaf2 0%, #eef2ff 48%, #f8fafc 100%);
-  --foreground: #111827;
-  --muted: #475569;
+  --page-bg: #ffffff;
+  --surface: #ffffff;
+  --surface-soft: #fde8eb;
+  --surface-soft-strong: #ffeaed;
+  --heading: #0c1c1f;
+  --text: #0c1c1f;
+  --line: #d7d4db;
+  --accent: #f495a2;
+  --cta-line: #00c300;
+  --light-text: #fbfbfb;
+  --field-ghost: #00000080;
 }
 
 * {
@@ -26,9 +31,9 @@ body {
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--background);
-  color: var(--foreground);
-  font-family: "Outfit", "Noto Sans JP", "Hiragino Sans", Meiryo, sans-serif;
+  background: var(--page-bg);
+  color: var(--heading);
+  font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", "YuGothic", Meiryo, sans-serif;
   text-rendering: optimizeLegibility;
 }
 
@@ -37,5 +42,6 @@ a {
 }
 
 ::selection {
-  background: rgba(245, 158, 11, 0.3);
+  background: var(--accent);
+  color: var(--heading);
 }

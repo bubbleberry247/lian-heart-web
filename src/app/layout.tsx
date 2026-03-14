@@ -1,9 +1,18 @@
-import "./globals.css";
 import type { Metadata } from "next";
+import { lpContent } from "./content";
+import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Lian-Heart_web",
-  description: "Lian-Heart_web の専用ウェブサイトを構築するためのリポジトリです。",
+  title: lpContent.metadata.title,
+  description: lpContent.metadata.description,
+  applicationName: lpContent.brand,
+  openGraph: {
+    title: lpContent.metadata.title,
+    description: lpContent.metadata.description,
+    siteName: lpContent.brand,
+    locale: "ja_JP",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
