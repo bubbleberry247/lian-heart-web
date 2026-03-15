@@ -1,0 +1,5 @@
+interface:
+  display_name: "Agent Browser Auto-Connect"
+  short_description: "Reuse logged-in debug Chrome with agent-browser"
+  default_prompt: "Use agent-browser --auto-connect to attach to the user's logged-in debug Chrome session before asking for credentials."
+

@@ -1,0 +1,6 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1600" viewBox="0 0 2400 1600" fill="none">
+  <rect width="2400" height="1600" fill="#FDE8EB"/>
+  <rect x="24" y="24" width="2352" height="1552" rx="24" stroke="#F495A2" stroke-width="6" stroke-dasharray="18 12"/>
+  <text x="50%" y="46%" text-anchor="middle" fill="#0C1C1F" font-family="Yu Gothic, YuGothic, sans-serif" font-size="96" font-weight="700">SERVICE 01</text>
+  <text x="50%" y="56%" text-anchor="middle" fill="#E0354C" font-family="Montserrat, Yu Gothic, sans-serif" font-size="45" font-weight="700">2400x1600</text>
+</svg>

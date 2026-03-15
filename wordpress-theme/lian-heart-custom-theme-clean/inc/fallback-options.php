@@ -1,0 +1,137 @@
+﻿<?php
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+function lh_fallback_option_sections() {
+    return array('brand', 'hero', 'concept', 'pride', 'menu', 'greeting', 'qa', 'facility', 'company', 'contact');
+}
+
+function lh_fallback_options_enabled() {
+    return !function_exists('acf_add_options_page');
+}
+
+function lh_get_fallback_options() {
+    $value = get_option('lh_theme_fallback_options', array());
+    return is_array($value) ? $value : array();
+}
+
+function lh_fallback_save_options() {
+    if (!lh_fallback_options_enabled()) {
+        wp_die('Fallback options are disabled.');
+    }
+
+    if (!current_user_can('manage_options')) {
+        wp_die('You do not have permission to manage these settings.');
+    }
+
+    check_admin_referer('lh_save_fallback_options', 'lh_fallback_nonce');
+
+    $input    = isset($_POST['lh_theme_fallback_json']) && is_array($_POST['lh_theme_fallback_json']) ? $_POST['lh_theme_fallback_json'] : array();
+    $saved    = lh_get_fallback_options();
+    $defaults = lh_theme_defaults();
+    $result   = array();
+    $errors   = array();
+
+    foreach (lh_fallback_option_sections() as $section) {
+        $raw = isset($input[$section]) ? trim((string) wp_unslash($input[$section])) : '';
+
+        if ($raw === '') {
+            $result[$section] = array();
+            continue;
+        }
+
+        $decoded = json_decode($raw, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+            $result[$section] = $decoded;
+            continue;
+        }
+
+        $result[$section] = $saved[$section] ?? $defaults[$section] ?? array();
+        $errors[]         = $section;
+    }
+
+    update_option('lh_theme_fallback_options', $result, false);
+
+    $query_args = array(
+        'page'     => 'lian-heart-theme-settings',
+        'lh_saved' => empty($errors) ? '1' : '0',
+    );
+
+    if (!empty($errors)) {
+        $query_args['lh_error_sections'] = implode(',', $errors);
+    }
+
+    wp_safe_redirect(add_query_arg($query_args, admin_url('admin.php')));
+    exit;
+}
+add_action('admin_post_lh_save_fallback_options', 'lh_fallback_save_options');
+
+function lh_fallback_add_menu_page() {
+    if (!lh_fallback_options_enabled()) {
+        return;
+    }
+
+    add_menu_page(
+        'Lian Heart Theme',
+        'Lian Heart Theme',
+        'manage_options',
+        'lian-heart-theme-settings',
+        'lh_fallback_render_settings_page',
+        'dashicons-admin-generic',
+        61
+    );
+}
+add_action('admin_menu', 'lh_fallback_add_menu_page');
+
+function lh_fallback_render_settings_page() {
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+
+    $defaults = lh_theme_defaults();
+    $saved    = lh_get_fallback_options();
+    $has_save = isset($_GET['lh_saved']);
+    $errors   = isset($_GET['lh_error_sections']) ? array_filter(array_map('sanitize_key', explode(',', (string) wp_unslash($_GET['lh_error_sections'])))) : array();
+    ?>
+    <div class="wrap">
+        <h1>Lian Heart Theme</h1>
+        <p>ACF Pro未導入時の簡易設定画面です。各セクションをJSONで編集できます。ACF Proを導入した場合はそちらを優先します。</p>
+        <?php if ($has_save && empty($errors)) : ?>
+            <div class="notice notice-success is-dismissible"><p><strong>設定を保存しました。</strong></p></div>
+        <?php elseif ($has_save) : ?>
+            <div class="notice notice-error is-dismissible"><p><strong><?php echo esc_html(implode(', ', $errors)); ?> のJSON形式が正しくないため、直前の値を保持しました。</strong></p></div>
+        <?php endif; ?>
+        <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+            <input type="hidden" name="action" value="lh_save_fallback_options">
+            <?php wp_nonce_field('lh_save_fallback_options', 'lh_fallback_nonce'); ?>
+            <table class="form-table" role="presentation">
+                <tbody>
+                <?php foreach (lh_fallback_option_sections() as $section) : ?>
+                    <?php
+                    $value = !empty($saved[$section]) ? $saved[$section] : ($defaults[$section] ?? array());
+                    $json  = wp_json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                    ?>
+                    <tr>
+                        <th scope="row">
+                            <label for="lh-theme-<?php echo esc_attr($section); ?>"><?php echo esc_html($section); ?></label>
+                        </th>
+                        <td>
+                            <textarea
+                                id="lh-theme-<?php echo esc_attr($section); ?>"
+                                name="lh_theme_fallback_json[<?php echo esc_attr($section); ?>]"
+                                rows="14"
+                                class="large-text code"
+                            ><?php echo esc_textarea($json); ?></textarea>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php submit_button('保存'); ?>
+        </form>
+    </div>
+    <?php
+}
+
+

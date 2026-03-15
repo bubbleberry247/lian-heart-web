@@ -79,6 +79,59 @@ export default async function Home({
   ];
 
   const selectOptionsPlaceholder = "選択してください";
+  const revealScript = `(() => {
+    const setup = () => {
+      if (window.__lianHeartRevealInit) {
+        return;
+      }
+
+      window.__lianHeartRevealInit = true;
+
+      const targets = document.querySelectorAll("[data-reveal]");
+      if (!targets.length) {
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) {
+              return;
+            }
+
+            const element = entry.target;
+            const delay = element.getAttribute("data-delay");
+
+            if (delay) {
+              element.style.setProperty("--reveal-delay", delay + "ms");
+            }
+
+            element.classList.add("is-inview");
+
+            if (element.hasAttribute("data-wipe")) {
+              element.classList.add("is-animating");
+              window.setTimeout(() => element.classList.remove("is-animating"), 1200);
+            }
+
+            observer.unobserve(element);
+          });
+        },
+        {
+          threshold: 0.18,
+          rootMargin: "0px 0px -12% 0px",
+        },
+      );
+
+      targets.forEach((element) => observer.observe(element));
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", setup, { once: true });
+      return;
+    }
+
+    setup();
+  })();`;
 
   return (
     <>
@@ -86,6 +139,7 @@ export default async function Home({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
+      <script dangerouslySetInnerHTML={{ __html: revealScript }} />
 
       <main className={styles.page}>
         <header className={styles.header}>
@@ -103,7 +157,7 @@ export default async function Home({
         </header>
 
         <section className={styles.hero}>
-          <div className={styles.heroBody}>
+          <div className={styles.heroBody} data-reveal="up">
             <p className={styles.eyebrow}>{lpContent.hero.eyebrow}</p>
             <h1>{lpContent.hero.title}</h1>
             <p className={styles.lead}>{lpContent.hero.description}</p>
@@ -135,17 +189,23 @@ export default async function Home({
             </div>
           </div>
 
-          <div className={`${styles.visualCard} ${styles.heroVisual}`} aria-label="ヒーロー画像（プレースホルダー）" />
+          <div
+            className={`${styles.visualCard} ${styles.heroVisual}`}
+            aria-label="ヒーロー画像（プレースホルダー）"
+            data-reveal="wipe"
+            data-wipe
+            data-delay={120}
+          />
         </section>
 
         <section id="concept" className={styles.section}>
-          <div className={styles.sectionHeader}>
+          <div className={styles.sectionHeader} data-reveal="up">
             <p className={styles.sectionLabel}>{lpContent.concept.label}</p>
             <h2>{lpContent.concept.title}</h2>
           </div>
 
           <div className={styles.splitPanel}>
-            <div className={styles.copyBlock}>
+            <div className={styles.copyBlock} data-reveal="up" data-delay={60}>
               <p className={styles.copyLead}>{lpContent.concept.lead}</p>
               {lpContent.concept.body.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
@@ -155,20 +215,23 @@ export default async function Home({
             <div
               className={`${styles.visualCard} ${styles.conceptVisual}`}
               aria-label="コンセプト画像（プレースホルダー）"
+              data-reveal="wipe"
+              data-wipe
+              data-delay={140}
             />
           </div>
         </section>
 
         <section id="pride" className={styles.section}>
-          <div className={styles.sectionHeader}>
+          <div className={styles.sectionHeader} data-reveal="up">
             <p className={styles.sectionLabel}>{lpContent.features.label}</p>
             <h2>{lpContent.features.title}</h2>
             <p>{lpContent.features.intro}</p>
           </div>
 
           <div className={styles.cardGrid}>
-            {lpContent.features.items.map((item) => (
-              <article key={item.title} className={styles.card}>
+            {lpContent.features.items.map((item, index) => (
+              <article key={item.title} className={styles.card} data-reveal="up" data-delay={index * 90}>
                 <h3>{item.title}</h3>
                 <p>{item.body}</p>
               </article>
@@ -177,14 +240,14 @@ export default async function Home({
         </section>
 
         <section id="menu" className={styles.section}>
-          <div className={styles.sectionHeader}>
+          <div className={styles.sectionHeader} data-reveal="up">
             <p className={styles.sectionLabel}>{lpContent.flow.label}</p>
             <h2>{lpContent.flow.title}</h2>
           </div>
 
           <div className={styles.flowGrid}>
-            {lpContent.flow.items.map((item) => (
-              <article key={item.title} className={styles.flowCard}>
+            {lpContent.flow.items.map((item, index) => (
+              <article key={item.title} className={styles.flowCard} data-reveal="up" data-delay={index * 90}>
                 <h3>{item.title}</h3>
                 <p>{item.body}</p>
               </article>
@@ -194,7 +257,7 @@ export default async function Home({
         </section>
 
         <section id="greeting" className={styles.section}>
-          <div className={styles.sectionHeader}>
+          <div className={styles.sectionHeader} data-reveal="up">
             <p className={styles.sectionLabel}>{lpContent.greeting.label}</p>
             <h2>{lpContent.greeting.title}</h2>
           </div>
@@ -203,9 +266,11 @@ export default async function Home({
             <div
               className={`${styles.visualCard} ${styles.portraitCard}`}
               aria-label="代表写真（プレースホルダー）"
+              data-reveal="wipe"
+              data-wipe
             />
 
-            <div className={styles.copyBlock}>
+            <div className={styles.copyBlock} data-reveal="up" data-delay={80}>
               <p className={styles.personMeta}>
                 {lpContent.greeting.role ? `${lpContent.greeting.role} / ` : ""}
                 {lpContent.greeting.name}
@@ -218,14 +283,14 @@ export default async function Home({
         </section>
 
         <section id="qa" className={styles.section}>
-          <div className={styles.sectionHeader}>
+          <div className={styles.sectionHeader} data-reveal="up">
             <p className={styles.sectionLabel}>{lpContent.faq.label}</p>
             <h2>{lpContent.faq.title}</h2>
           </div>
 
           <div className={styles.faqList}>
-            {lpContent.faq.items.map((item) => (
-              <details key={item.question} className={styles.faqItem}>
+            {lpContent.faq.items.map((item, index) => (
+              <details key={item.question} className={styles.faqItem} data-reveal="up" data-delay={index * 70}>
                 <summary>{item.question}</summary>
                 <p>{item.answer}</p>
               </details>
@@ -234,15 +299,15 @@ export default async function Home({
         </section>
 
         <section id="facility" className={styles.section}>
-          <div className={styles.sectionHeader}>
+          <div className={styles.sectionHeader} data-reveal="up">
             <p className={styles.sectionLabel}>{lpContent.facilities.label}</p>
             <h2>{lpContent.facilities.title}</h2>
             <p>{lpContent.facilities.intro}</p>
           </div>
 
           <div className={styles.cardGrid}>
-            {lpContent.facilities.items.map((item) => (
-              <article key={item.title} className={styles.card}>
+            {lpContent.facilities.items.map((item, index) => (
+              <article key={item.title} className={styles.card} data-reveal="up" data-delay={index * 90}>
                 <h3>{item.title}</h3>
                 <p>{item.body}</p>
               </article>
@@ -251,13 +316,13 @@ export default async function Home({
         </section>
 
         <section id="shop-info" className={styles.section}>
-          <div className={styles.sectionHeader}>
+          <div className={styles.sectionHeader} data-reveal="up">
             <p className={styles.sectionLabel}>{lpContent.company.label}</p>
             <h2>{lpContent.company.title}</h2>
             <p>{lpContent.company.intro}</p>
           </div>
 
-          <div className={styles.companyCard}>
+          <div className={styles.companyCard} data-reveal="up" data-delay={60}>
             <div className={styles.companyGrid}>
               {companyInfo.map((item) => (
                 <div key={item.key}>
@@ -278,7 +343,7 @@ export default async function Home({
         </section>
 
         <section id="contact" className={styles.section}>
-          <div className={styles.sectionHeader}>
+          <div className={styles.sectionHeader} data-reveal="up">
             <p className={styles.sectionLabel}>{lpContent.contact.label}</p>
             <h2>{lpContent.contact.title}</h2>
             <p>{lpContent.contact.lead}</p>
@@ -286,7 +351,7 @@ export default async function Home({
           </div>
 
           <div className={styles.contactLayout}>
-            <div className={styles.contactCard}>
+            <div className={styles.contactCard} data-reveal="up" data-delay={60}>
               <div className={styles.ctaStack}>
                 {lpContent.ctas.map((cta, index) => (
                   <a
@@ -308,7 +373,7 @@ export default async function Home({
               </div>
             </div>
 
-            <div className={styles.formCard}>
+            <div className={styles.formCard} data-reveal="up" data-delay={140}>
               <div className={styles.formIntro}>
                 <h3>{lpContent.contact.formTitle}</h3>
                 <p>{lpContent.contact.formDescription}</p>
@@ -393,7 +458,7 @@ export default async function Home({
           </div>
         </section>
 
-        <footer className={styles.footer}>
+        <footer className={styles.footer} data-reveal="up">
           <div>
             <a className={styles.logo} href="#">
               {lpContent.footer.logoText}
