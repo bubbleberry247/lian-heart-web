@@ -35,6 +35,50 @@ function lh_deep_merge($defaults, $overrides) {
     return $merged;
 }
 
+function lh_merge_indexed_items($defaults, $overrides) {
+    if (!is_array($defaults)) {
+        return is_array($overrides) ? $overrides : $defaults;
+    }
+
+    if (!is_array($overrides) || $overrides === array()) {
+        return $defaults;
+    }
+
+    $merged = array();
+    $max = max(count($defaults), count($overrides));
+
+    for ($i = 0; $i < $max; $i++) {
+        $default_item = $defaults[$i] ?? array();
+        $override_item = $overrides[$i] ?? array();
+
+        if (is_array($default_item) && is_array($override_item)) {
+            $merged[] = lh_deep_merge($default_item, $override_item);
+            continue;
+        }
+
+        if ($override_item === null || $override_item === '') {
+            $merged[] = $default_item;
+            continue;
+        }
+
+        $merged[] = $override_item;
+    }
+
+    return $merged;
+}
+
+function lh_fill_empty($value, $fallback) {
+    if ($value === null || $value === '') {
+        return $fallback;
+    }
+
+    if (is_array($value) && $value === array()) {
+        return $fallback;
+    }
+
+    return $value;
+}
+
 function lh_paragraphs($value) {
     if (is_array($value)) {
         return array_values(array_filter(array_map('trim', $value)));
@@ -96,16 +140,73 @@ function lh_button_class($style = 'primary') {
     return $map[$style] ?? $map['primary'];
 }
 
+function lh_resolve_anchor_url($url) {
+    if (!is_string($url) || $url === '') {
+        return home_url('/');
+    }
+
+    if (strpos($url, '#') !== 0) {
+        return $url;
+    }
+
+    if (is_front_page()) {
+        return $url;
+    }
+
+    return trailingslashit(home_url('/')) . $url;
+}
+
 function lh_get_cta_url($item) {
     if (!is_array($item)) {
-        return '#contact';
+        return lh_resolve_anchor_url('#contact');
     }
 
     if (!empty($item['url'])) {
-        return $item['url'];
+        return lh_resolve_anchor_url($item['url']);
     }
 
-    return '#contact';
+    return lh_resolve_anchor_url('#contact');
+}
+
+function lh_knowledge_article_definitions() {
+    return array(
+        'knowledge-facility-choice' => array(
+            'slug' => 'knowledge-facility-choice',
+            'url' => home_url('/knowledge-facility-choice/'),
+            'en_label' => 'Knowledge',
+            'title' => '施設の選び方 介護付・住宅型・サ高住の違い',
+            'hero_image' => lh_theme_asset_uri('assets/media/facility-type-01-v2.jpg'),
+            'card_title' => '施設の選び方 介護付・住宅型・サ高住の違い',
+            'card_body' => '介護付・住宅型・サ高住の違いと、それぞれどんな方に向きやすいかを整理します。',
+            'lead' => '介護付有料老人ホーム、住宅型有料老人ホーム、サービス付き高齢者向け住宅は、似て見えても受けられる支援や暮らし方が異なります。特徴の違いを整理し、ご本人やご家族にとって無理のない選び方を考えます。',
+            'cta_title' => '施設の違いを整理しながら相談したい方へ',
+            'cta_body' => 'ご本人の状態や暮らし方、ご家族の通いやすさを踏まえながら、候補を比較しやすい形でご案内します。',
+        ),
+        'knowledge-family-checkpoints' => array(
+            'slug' => 'knowledge-family-checkpoints',
+            'url' => home_url('/knowledge-family-checkpoints/'),
+            'en_label' => 'Knowledge',
+            'title' => '家族が後悔しないための施設選び 何を基準に見るべきか',
+            'hero_image' => lh_theme_asset_uri('assets/media/service-aside.jpg'),
+            'card_title' => '家族が後悔しないための施設選び 何を基準に見るべきか',
+            'card_body' => '面会しやすさ、医療対応、雰囲気など、家族が実際に見ている基準を整理します。',
+            'lead' => '施設選びでは、料金や空室だけでなく、面会しやすさ、スタッフの雰囲気、医療対応、追加費用の見え方など、暮らし始めてからの安心につながる視点が欠かせません。家族が後悔しにくい見方を整理します。',
+            'cta_title' => '家族目線で比較ポイントを整理したい方へ',
+            'cta_body' => '見学前の確認項目づくりや、候補を比べる軸の整理から一緒に進められます。',
+        ),
+        'knowledge-after-discharge' => array(
+            'slug' => 'knowledge-after-discharge',
+            'url' => home_url('/knowledge-after-discharge/'),
+            'en_label' => 'Knowledge',
+            'title' => '退院後にあわてないための施設探し 何から決めるべきか',
+            'hero_image' => lh_theme_asset_uri('assets/media/support-flow-01.jpg'),
+            'card_title' => '退院後にあわてないための施設探し 何から決めるべきか',
+            'card_body' => '退院前後の慌ただしい時期に、何を先に整理すべきかを分かりやすくまとめます。',
+            'lead' => '退院が近づくと、本人の体調、在宅介護の負担、医療面の受け入れ、移動距離など、短い時間で確認すべきことが増えます。急ぎの状況でも見落としを減らすための順番を整理します。',
+            'cta_title' => '退院前後の住まい探しを相談したい方へ',
+            'cta_body' => '今すぐ決めるべきことと後から詰められることを分けながら、焦らず候補整理を進められます。',
+        ),
+    );
 }
 
 function lh_render_button($item, $extra_class = '') {
@@ -125,6 +226,8 @@ function lh_render_button($item, $extra_class = '') {
 }
 
 function lh_theme_defaults() {
+    $knowledge_articles = array_values(lh_knowledge_article_definitions());
+
     return array(
         'brand' => array(
             'site_name'   => 'リアンハート',
@@ -137,7 +240,7 @@ function lh_theme_defaults() {
         'hero' => array(
             'eyebrow'     => '愛知県全域対応の老人ホーム紹介・入居相談',
             'title'       => "愛知で老人ホーム紹介を\nご希望の方へ。\n入居相談から比較まで伴走します。",
-            'description' => "介護度、医療的な配慮、費用、立地、ご家族の通いやすさを整理しながら候補をご提案します。\n見学・比較検討まで丁寧に伴走し、入居後の『思っていたのと違った』を減らすための事前確認を大切にしています。",
+            'description' => "介護度・費用・立地・ご家族の通いやすさを整理しながら、最適な施設候補をご提案します。",
             'slides'      => array(
                 array(
                     'desktop_image' => lh_theme_asset_uri('assets/media/hero-slide-01-desktop.jpg'),
@@ -160,13 +263,46 @@ function lh_theme_defaults() {
                 array('label' => 'LINEで入居相談する', 'url' => '#contact', 'style' => 'line'),
             ),
         ),
+        'trust' => array(
+            'items' => array(
+                array('label' => 'Free', 'text' => '相談・ご紹介はすべて無料'),
+                array('label' => 'Area', 'text' => '愛知県全域でご相談対応'),
+                array('label' => 'Visit', 'text' => '見学調整や比較整理もサポート'),
+                array('label' => 'Family', 'text' => 'ご家族だけのご相談も可能'),
+            ),
+        ),
+        'timing' => array(
+            'en_label' => 'Timing',
+            'title'    => 'こんなときにご相談ください',
+            'items'    => array(
+                array(
+                    'title' => '退院後の生活が不安',
+                    'body'  => '医療面や生活動線も含めて、無理のない候補を整理したい方へ。',
+                ),
+                array(
+                    'title' => '一人暮らしの不安が増えた',
+                    'body'  => '見守り体制や生活支援の内容を比べながら検討したい方へ。',
+                ),
+                array(
+                    'title' => '介護負担が大きくなってきた',
+                    'body'  => 'ご家族だけで抱え込まず、候補整理から相談したい方へ。',
+                ),
+                array(
+                    'title' => '元気なうちに住み替え準備をしたい',
+                    'body'  => '早めに比較を始めて、将来に備えたい方へ。',
+                ),
+            ),
+            'cta' => array('label' => '相談してみる', 'url' => '#contact', 'style' => 'primary'),
+        ),
         'concept' => array(
             'en_label' => 'Concept',
-            'title'    => 'ご本人にもご家族にも、納得できる老人ホーム紹介を。',
+            'title'    => "納得できる\n老人ホーム紹介を。",
             'lead'     => '介護施設紹介は、空室や料金だけで決められるものではありません。',
             'body'     => array(
-                '今の身体状況、必要な介護や医療的な配慮、これからの暮らし方、ご家族の通いやすさや予算。大切なのは、条件を一つずつ整理しながら、無理のない選択肢を見つけることです。',
-                'リアンハートでは、愛知県内で老人ホーム紹介をご検討中の方へ、入居相談の段階から見学前の情報整理、比較検討まで伴走し、入居後の「思っていたのと違った」を減らすご提案を行います。',
+                '施設選びは、費用や場所だけで決めきれません。医療対応や暮らしやすさまで、最初に整理することが大切です。',
+                '急いで候補を絞るほど、「別もあったのでは」と迷いが残りやすくなります。だからこそ、比べる軸を先につくります。',
+                'リアンハートでは、ご本人の状態やご家族の通いやすさを確かめながら、無理のない候補を一緒に整えていきます。',
+                '見学前の整理から比較まで伴走し、納得できる入居相談につなげます。',
             ),
             'visuals'  => array(
                 array('image' => lh_theme_asset_uri('assets/media/concept-visual-01.jpg'), 'alt' => 'コンセプト画像 01'),
@@ -232,12 +368,38 @@ function lh_theme_defaults() {
             'name'      => '山田 太郎',
             'role'      => '代表',
             'body'      => array(
-                'はじめまして。リアンハート代表の山田太郎です。',
-                '老人ホーム紹介や介護施設紹介は、空室や費用だけで決められるものではありません。ご本人の状態、ご家族の不安、これからの暮らし方まで整理しながら、一つずつ判断していくことが大切だと考えています。',
-                '比較しやすい形で情報を整理し、納得できる選択につながるよう入居相談から伴走します。',
+                '納得できる入居相談を、すべてのご家族へ。',
+                '愛知で老人ホーム紹介を検討される方の多くは、急な退院や介護負担の増加など、時間の余裕がない中で判断を迫られます。',
+                'だからこそ、費用や立地だけでなく、医療的な配慮、生活リズム、ご家族の通いやすさまで整理し、比べる順番を整えることが大切です。',
+                'リアンハートでは、見学前の情報整理、確認項目の洗い出し、比較時の迷いの言語化まで伴走し、入居後のミスマッチを減らすご提案を心がけています。',
+                '大切なご家族のこれからを、急がせず、曖昧にせず、一つずつ確認しながら進めてまいります。',
             ),
             'image'      => lh_theme_asset_uri('assets/media/greeting-cover.png'),
             'decoration' => 'Lian Heart',
+        ),
+        'knowledge' => array(
+            'en_label' => 'Knowledge',
+            'title'    => '入居前に知っておきたいこと',
+            'items'    => array(
+                array(
+                    'title'      => $knowledge_articles[0]['card_title'],
+                    'body'       => $knowledge_articles[0]['card_body'],
+                    'url'        => $knowledge_articles[0]['url'],
+                    'link_label' => '詳しく見る',
+                ),
+                array(
+                    'title'      => $knowledge_articles[1]['card_title'],
+                    'body'       => $knowledge_articles[1]['card_body'],
+                    'url'        => $knowledge_articles[1]['url'],
+                    'link_label' => '詳しく見る',
+                ),
+                array(
+                    'title'      => $knowledge_articles[2]['card_title'],
+                    'body'       => $knowledge_articles[2]['card_body'],
+                    'url'        => $knowledge_articles[2]['url'],
+                    'link_label' => '詳しく見る',
+                ),
+            ),
         ),
         'qa' => array(
             'en_label' => 'FAQ',
@@ -247,6 +409,10 @@ function lh_theme_defaults() {
                 array('question' => '愛知県のどこまで対応していますか？', 'answer' => '名古屋市をはじめ、尾張・知多・西三河・東三河など、愛知県全域でご相談を承ります。'),
                 array('question' => '施設見学の日程調整はお願いできますか？', 'answer' => 'はい。候補施設の見学日程を調整し、比較しやすいよう確認ポイントも整理します。'),
                 array('question' => '家族だけで相談しても大丈夫ですか？', 'answer' => 'はい。ご本人がすぐに動けない場合や、まずはご家族で情報整理したい場合もご相談いただけます。'),
+                array('question' => '予算が限られていても相談できますか？', 'answer' => 'はい。ご予算の範囲で比較しやすい候補を整理し、費用面で確認したいポイントも分かりやすくご案内します。'),
+                array('question' => '見学には同行してもらえますか？', 'answer' => '日程調整だけでなく、見学時に確認したい項目の整理や比較の視点づくりまでサポートします。'),
+                array('question' => '夫婦で入居できる施設も紹介できますか？', 'answer' => 'はい。夫婦入居が可能な居室や受入条件を確認しながら、ご状況に合う候補をご案内します。'),
+                array('question' => '家族だけで相談を進めることはできますか？', 'answer' => 'はい。まずはご家族だけで条件を整理し、その後にご本人を含めて比較を進める形でもご相談いただけます。'),
             ),
         ),
         'facility' => array(
@@ -254,10 +420,10 @@ function lh_theme_defaults() {
             'title'    => 'ご紹介可能な施設の種類',
             'lead'     => '老人ホーム紹介・介護施設紹介では、ご本人の状態やご希望に応じて、以下のような施設種別から候補をご案内します。',
             'items'    => array(
-                array('title' => '介護付有料老人ホーム', 'description' => '日常的な介護を受けながら生活したい方に向けた候補です。', 'image' => null, 'url' => '#contact'),
-                array('title' => '住宅型有料老人ホーム', 'description' => '生活支援を受けながら、必要に応じて外部サービスの利用を検討したい方に向けた候補です。', 'image' => null, 'url' => '#contact'),
-                array('title' => 'サービス付き高齢者向け住宅', 'description' => '見守りや生活相談を受けながら、自分らしい暮らしを続けたい方に向けた候補です。', 'image' => null, 'url' => '#contact'),
-                array('title' => 'グループホーム', 'description' => '少人数の環境で落ち着いて生活したい方に向けた候補です。', 'image' => null, 'url' => '#contact'),
+                array('title' => '介護付有料老人ホーム', 'description' => '日常的な介護を受けながら生活したい方に向けた候補です。', 'image' => lh_theme_asset_uri('assets/media/facility-type-01-v2.jpg'), 'url' => '#contact'),
+                array('title' => '住宅型有料老人ホーム', 'description' => '生活支援を受けながら、必要に応じて外部サービスの利用を検討したい方に向けた候補です。', 'image' => lh_theme_asset_uri('assets/media/facility-type-02-v2.jpg'), 'url' => '#contact'),
+                array('title' => 'サービス付き高齢者向け住宅', 'description' => '見守りや生活相談を受けながら、自分らしい暮らしを続けたい方に向けた候補です。', 'image' => lh_theme_asset_uri('assets/media/facility-type-03-v2.jpg'), 'url' => '#contact'),
+                array('title' => 'グループホーム', 'description' => '少人数の環境で落ち着いて生活したい方に向けた候補です。', 'image' => lh_theme_asset_uri('assets/media/facility-type-04.jpg'), 'url' => '#contact'),
             ),
         ),
         'company' => array(
@@ -279,14 +445,17 @@ function lh_theme_defaults() {
         'contact' => array(
             'en_label'      => 'Contact',
             'title'         => '入居相談・お問い合わせ',
-            'catch'         => '老人ホーム紹介や介護施設紹介に関する入居相談を承っています。ご本人、ご家族、関係者の方からのご連絡に対応します。',
-            'lead_title'    => 'お急ぎの場合は、お電話での入居相談をおすすめします。',
+            'catch'         => '相談・見学調整・ご紹介はすべて無料です。',
+            'lead_title'    => 'お問い合わせはフォームよりお願いいたします。',
             'lead_body'     => array(
-                'ご本人、ご家族、関係者の方からのご相談に対応します。',
-                '希望エリア、月額予算、介護度、現在の生活状況、入居希望時期などが分かる範囲であるとスムーズです。',
+                'ご相談内容を確認のうえ、2〜3営業日内を目安にご返信いたします。',
+                'お急ぎの場合は、お電話でのご相談も承っています。',
             ),
             'notes'         => array(
-                '会社名以外の掲載情報はサンプルです。実際の情報に差し替えてください。',
+                'ご入力いただいた情報は、お問い合わせへの回答やご連絡以外には使用いたしません。',
+                'お問い合わせ内容によっては、回答できない場合がございますので、あらかじめご了承ください。',
+                'お急ぎの場合は、お手数ですがお電話にてお問い合わせください。',
+                '個人情報の取扱いについては、プライバシーポリシーをご確認ください。',
             ),
             'form_title'    => '入居相談フォーム',
             'success_title' => '送信ありがとうございました',
@@ -321,13 +490,15 @@ function lh_theme_data() {
         $data[$section] = lh_deep_merge($section_defaults, lh_get_option_group($section));
     }
 
-    if (empty($data['hero']['slides'])) {
-        $data['hero']['slides'] = $defaults['hero']['slides'];
-    }
-
-    if (empty($data['hero']['ctas'])) {
-        $data['hero']['ctas'] = $defaults['hero']['ctas'];
-    }
+    $data['hero']['slides'] = lh_merge_indexed_items($defaults['hero']['slides'], $data['hero']['slides'] ?? array());
+    $data['hero']['ctas'] = lh_merge_indexed_items($defaults['hero']['ctas'], $data['hero']['ctas'] ?? array());
+    $data['trust']['items'] = lh_merge_indexed_items($defaults['trust']['items'], $data['trust']['items'] ?? array());
+    $data['timing']['items'] = lh_merge_indexed_items($defaults['timing']['items'], $data['timing']['items'] ?? array());
+    $data['concept']['visuals'] = lh_merge_indexed_items($defaults['concept']['visuals'], $data['concept']['visuals'] ?? array());
+    $data['pride']['cards'] = lh_merge_indexed_items($defaults['pride']['cards'], $data['pride']['cards'] ?? array());
+    $data['menu']['cards'] = lh_merge_indexed_items($defaults['menu']['cards'], $data['menu']['cards'] ?? array());
+    $data['knowledge']['items'] = lh_merge_indexed_items($defaults['knowledge']['items'], $data['knowledge']['items'] ?? array());
+    $data['facility']['items'] = lh_merge_indexed_items($defaults['facility']['items'], $data['facility']['items'] ?? array());
 
     $data['hero']['ctas'] = array_values(array_slice(array_filter($data['hero']['ctas'], function ($item) {
         return is_array($item) && !empty($item['label']);
@@ -337,15 +508,105 @@ function lh_theme_data() {
         $data['brand']['header_cta'] = $defaults['brand']['header_cta'];
     }
 
+    if (empty($data['timing']['cta']) || !is_array($data['timing']['cta'])) {
+        $data['timing']['cta'] = $defaults['timing']['cta'];
+    }
+
+    foreach ($data['trust']['items'] as $index => $item) {
+        $default = $defaults['trust']['items'][$index] ?? array();
+        $data['trust']['items'][$index]['label'] = lh_fill_empty($item['label'] ?? null, $default['label'] ?? '');
+        $data['trust']['items'][$index]['text'] = lh_fill_empty($item['text'] ?? null, $default['text'] ?? '');
+    }
+
+    foreach ($data['timing']['items'] as $index => $item) {
+        $default = $defaults['timing']['items'][$index] ?? array();
+        $data['timing']['items'][$index]['title'] = lh_fill_empty($item['title'] ?? null, $default['title'] ?? '');
+        $data['timing']['items'][$index]['body'] = lh_fill_empty($item['body'] ?? null, $default['body'] ?? '');
+    }
+
+    foreach ($data['hero']['slides'] as $index => $slide) {
+        $default = $defaults['hero']['slides'][$index] ?? array();
+        $data['hero']['slides'][$index]['desktop_image'] = lh_fill_empty($slide['desktop_image'] ?? null, $default['desktop_image'] ?? null);
+        $data['hero']['slides'][$index]['mobile_image'] = lh_fill_empty($slide['mobile_image'] ?? null, $default['mobile_image'] ?? null);
+        $data['hero']['slides'][$index]['alt'] = lh_fill_empty($slide['alt'] ?? null, $default['alt'] ?? 'ヒーロー画像');
+    }
+
+    foreach ($data['concept']['visuals'] as $index => $visual) {
+        $default = $defaults['concept']['visuals'][$index] ?? array();
+        $data['concept']['visuals'][$index]['image'] = lh_fill_empty($visual['image'] ?? null, $default['image'] ?? null);
+        $data['concept']['visuals'][$index]['alt'] = lh_fill_empty($visual['alt'] ?? null, $default['alt'] ?? 'コンセプト画像');
+    }
+
+    foreach ($data['pride']['cards'] as $index => $card) {
+        $default = $defaults['pride']['cards'][$index] ?? array();
+        $data['pride']['cards'][$index]['image'] = lh_fill_empty($card['image'] ?? null, $default['image'] ?? null);
+        $data['pride']['cards'][$index]['code'] = lh_fill_empty($card['code'] ?? null, $default['code'] ?? '');
+        $data['pride']['cards'][$index]['title'] = lh_fill_empty($card['title'] ?? null, $default['title'] ?? '');
+        $data['pride']['cards'][$index]['body'] = lh_fill_empty($card['body'] ?? null, $default['body'] ?? '');
+    }
+
+    foreach ($data['menu']['cards'] as $index => $card) {
+        $default = $defaults['menu']['cards'][$index] ?? array();
+        $data['menu']['cards'][$index]['image'] = lh_fill_empty($card['image'] ?? null, $default['image'] ?? null);
+        $data['menu']['cards'][$index]['code'] = lh_fill_empty($card['code'] ?? null, $default['code'] ?? '');
+        $data['menu']['cards'][$index]['title'] = lh_fill_empty($card['title'] ?? null, $default['title'] ?? '');
+        $data['menu']['cards'][$index]['body'] = lh_fill_empty($card['body'] ?? null, $default['body'] ?? '');
+    }
+
+    foreach ($data['knowledge']['items'] as $index => $item) {
+        $default = $defaults['knowledge']['items'][$index] ?? array();
+        $data['knowledge']['items'][$index]['title'] = lh_fill_empty($item['title'] ?? null, $default['title'] ?? '');
+        $data['knowledge']['items'][$index]['body'] = lh_fill_empty($item['body'] ?? null, $default['body'] ?? '');
+        $data['knowledge']['items'][$index]['url'] = lh_fill_empty($item['url'] ?? null, $default['url'] ?? '#contact');
+        $data['knowledge']['items'][$index]['link_label'] = lh_fill_empty($item['link_label'] ?? null, $default['link_label'] ?? '詳しく見る');
+    }
+
+    foreach ($data['facility']['items'] as $index => $item) {
+        $default = $defaults['facility']['items'][$index] ?? array();
+        $data['facility']['items'][$index]['image'] = lh_fill_empty($item['image'] ?? null, $default['image'] ?? null);
+        $data['facility']['items'][$index]['title'] = lh_fill_empty($item['title'] ?? null, $default['title'] ?? '');
+        $data['facility']['items'][$index]['description'] = lh_fill_empty($item['description'] ?? null, $default['description'] ?? '');
+        $data['facility']['items'][$index]['url'] = lh_fill_empty($item['url'] ?? null, $default['url'] ?? '#contact');
+    }
+
+    $concept_title = (string) ($data['concept']['title'] ?? '');
+    if (strpos($concept_title, 'ご本人にもご家族にも') !== false || strpos($concept_title, '納得できる老人ホーム紹介を。') !== false) {
+        $data['concept']['title'] = $defaults['concept']['title'];
+    }
+
+    $concept_body = array_values(array_filter(array_map('trim', lh_paragraphs($data['concept']['body'] ?? array()))));
+    if (count($concept_body) < count($defaults['concept']['body'])) {
+        $data['concept']['body'] = $defaults['concept']['body'];
+    }
+
+    $greeting_body = array_values(array_filter(array_map('trim', lh_paragraphs($data['greeting']['body'] ?? array()))));
+    if (count($greeting_body) < count($defaults['greeting']['body'])) {
+        $data['greeting']['body'] = $defaults['greeting']['body'];
+    }
+
     return $data;
 }
 
-function lh_render_headline($english, $japanese) {
+function lh_render_headline($english, $japanese, $modifiers = array()) {
+    $classes = array('wp-headline', 'js-headline-fx');
+
+    if (is_string($modifiers) && $modifiers !== '') {
+        $modifiers = preg_split('/\s+/', trim($modifiers));
+    }
+
+    foreach ((array) $modifiers as $modifier) {
+        if (!is_string($modifier) || trim($modifier) === '') {
+            continue;
+        }
+
+        $classes[] = 'wp-headline--' . sanitize_html_class($modifier);
+    }
+
     ob_start();
     ?>
-    <header class="wp-headline js-headline-fx">
-        <p class="wp-headline__sub"><?php echo esc_html($english); ?></p>
-        <h2 class="wp-headline__main"><?php echo esc_html($japanese); ?></h2>
+    <header class="<?php echo esc_attr(implode(' ', array_unique($classes))); ?>">
+        <p class="wp-headline__alphabetic"><?php echo esc_html(strtoupper((string) $english)); ?></p>
+        <h2 class="wp-block-heading wp-headline__kana"><?php echo esc_html($japanese); ?></h2>
     </header>
     <?php
     return trim(ob_get_clean());
@@ -363,17 +624,43 @@ function lh_register_theme_supports() {
 add_action('after_setup_theme', 'lh_register_theme_supports');
 
 function lh_enqueue_assets() {
-    wp_enqueue_style('lh-theme-style', get_stylesheet_uri(), array(), lh_theme_version());
+    $theme_version = lh_theme_version();
+    $style_file = get_stylesheet_directory() . '/style.css';
+    $base_reset_file = get_template_directory() . '/assets/css/base-reset.css';
+    $front_css_file = get_template_directory() . '/assets/css/front-page.css';
+    $form_css_file = get_template_directory() . '/assets/css/form.css';
+    $front_js_file = get_template_directory() . '/assets/js/front-page.js';
+    $form_js_file = get_template_directory() . '/assets/js/form.js';
+    $knowledge_article_css_file = get_template_directory() . '/assets/css/knowledge-article.css';
+    $knowledge_article_js_file = get_template_directory() . '/assets/js/knowledge-article.js';
+
+    $style_ver = file_exists($style_file) ? (string) filemtime($style_file) : $theme_version;
+    $base_reset_ver = file_exists($base_reset_file) ? (string) filemtime($base_reset_file) : $theme_version;
+    $front_css_ver = file_exists($front_css_file) ? (string) filemtime($front_css_file) : $theme_version;
+    $form_css_ver = file_exists($form_css_file) ? (string) filemtime($form_css_file) : $theme_version;
+    $front_js_ver = file_exists($front_js_file) ? (string) filemtime($front_js_file) : $theme_version;
+    $form_js_ver = file_exists($form_js_file) ? (string) filemtime($form_js_file) : $theme_version;
+    $knowledge_article_css_ver = file_exists($knowledge_article_css_file) ? (string) filemtime($knowledge_article_css_file) : $theme_version;
+    $knowledge_article_js_ver = file_exists($knowledge_article_js_file) ? (string) filemtime($knowledge_article_js_file) : $theme_version;
+
+    wp_enqueue_style('lh-theme-style', get_stylesheet_uri(), array(), $style_ver);
     wp_enqueue_style('lh-google-fonts', 'https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&family=Montserrat:wght@600;700&display=swap', array(), null);
     wp_enqueue_style('lh-swiper', 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css', array(), '8.4.7');
-    wp_enqueue_style('lh-front-page', get_template_directory_uri() . '/assets/css/front-page.css', array('lh-google-fonts', 'lh-swiper'), lh_theme_version());
-    wp_enqueue_style('lh-form', get_template_directory_uri() . '/assets/css/form.css', array('lh-front-page'), lh_theme_version());
+    wp_enqueue_style('lh-base-reset', get_template_directory_uri() . '/assets/css/base-reset.css', array(), $base_reset_ver);
+    wp_enqueue_style('lh-front-page', get_template_directory_uri() . '/assets/css/front-page.css', array('lh-base-reset', 'lh-google-fonts', 'lh-swiper'), $front_css_ver);
+    wp_enqueue_style('lh-form', get_template_directory_uri() . '/assets/css/form.css', array('lh-front-page'), $form_css_ver);
 
     wp_enqueue_script('lh-swiper', 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js', array(), '8.4.7', true);
     wp_enqueue_script('lh-gsap', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js', array(), '3.12.7', true);
     wp_enqueue_script('lh-scrolltrigger', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/ScrollTrigger.min.js', array('lh-gsap'), '3.12.7', true);
-    wp_enqueue_script('lh-front-page', get_template_directory_uri() . '/assets/js/front-page.js', array('lh-swiper', 'lh-scrolltrigger'), lh_theme_version(), true);
-    wp_enqueue_script('lh-form', get_template_directory_uri() . '/assets/js/form.js', array(), lh_theme_version(), true);
+    wp_enqueue_script('lh-splitting', get_template_directory_uri() . '/assets/vendor/splitting.min.js', array(), '1.0.6', true);
+    wp_enqueue_script('lh-front-page', get_template_directory_uri() . '/assets/js/front-page.js', array('lh-swiper', 'lh-scrolltrigger', 'lh-splitting'), $front_js_ver, true);
+    wp_enqueue_script('lh-form', get_template_directory_uri() . '/assets/js/form.js', array(), $form_js_ver, true);
+
+    if (is_page_template('page-templates/template-knowledge-article.php')) {
+        wp_enqueue_style('lh-knowledge-article', get_template_directory_uri() . '/assets/css/knowledge-article.css', array('lh-front-page'), $knowledge_article_css_ver);
+        wp_enqueue_script('lh-knowledge-article', get_template_directory_uri() . '/assets/js/knowledge-article.js', array('lh-front-page'), $knowledge_article_js_ver, true);
+    }
 
     wp_localize_script(
         'lh-form',
@@ -385,6 +672,9 @@ function lh_enqueue_assets() {
                 'sending' => '送信しています。',
                 'success' => '送信ありがとうございました。内容を確認のうえご連絡いたします。',
                 'error'   => '送信に失敗しました。時間をおいて再度お試しください。',
+                'required' => '必須項目を入力してください。',
+                'confirm'  => '確認する',
+                'back'     => '入力に戻る',
             ),
         )
     );
