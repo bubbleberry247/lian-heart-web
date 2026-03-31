@@ -321,7 +321,7 @@ export const lpContent = {
         type: "checkbox",
         required: true,
       },
-    ],
+    ] satisfies ContactField[],
     submitLabel: "入居相談を送信する",
   },
   footer: {

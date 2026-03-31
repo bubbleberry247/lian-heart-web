@@ -4,20 +4,6 @@
   padding: 16px 0 96px;
 }
 
-[data-reveal] {
-  opacity: 0;
-  transform: translate3d(0, 42px, 0);
-  transition:
-    opacity 900ms ease,
-    transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
-  transition-delay: var(--reveal-delay, 0ms);
-  will-change: transform, opacity;
-}
-
-[data-reveal].is-inview {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-}
 
 .header,
 .hero,
@@ -205,7 +191,7 @@
 
 .secondaryAction {
   background: var(--cta-line);
-  color: #ffffff;
+  color: var(--light-text);
   border-color: var(--cta-line);
 }
 
@@ -277,13 +263,13 @@
   overflow: hidden;
 }
 
-#concept,
-#greeting,
-#contact {
+.sectionConcept,
+.sectionGreeting,
+.sectionContact {
   background: linear-gradient(180deg, var(--surface) 0%, var(--surface-soft-strong) 100%);
 }
 
-#menu {
+.sectionMenu {
   background: linear-gradient(180deg, var(--surface) 0%, var(--surface-soft) 100%);
 }
 
@@ -374,8 +360,8 @@
   overflow: hidden;
 }
 
-#pride .card::before,
-#facility .card::before {
+.sectionPride .card::before,
+.sectionFacility .card::before {
   content: "";
   display: block;
   aspect-ratio: 16 / 10;
@@ -384,31 +370,31 @@
   background-size: cover;
 }
 
-#pride .card:nth-child(1)::before {
+.sectionPride .card:nth-child(1)::before {
   background-image: url("/images/consultation-family.jpg");
 }
 
-#pride .card:nth-child(2)::before {
+.sectionPride .card:nth-child(2)::before {
   background-image: url("/images/care-team.jpg");
 }
 
-#pride .card:nth-child(3)::before {
+.sectionPride .card:nth-child(3)::before {
   background-image: url("/images/facility-room.jpg");
 }
 
-#facility .card:nth-child(1)::before {
+.sectionFacility .card:nth-child(1)::before {
   background-image: url("/images/facility-room.jpg");
 }
 
-#facility .card:nth-child(2)::before {
+.sectionFacility .card:nth-child(2)::before {
   background-image: url("/images/senior-home.jpg");
 }
 
-#facility .card:nth-child(3)::before {
+.sectionFacility .card:nth-child(3)::before {
   background-image: url("/images/care-team.jpg");
 }
 
-#facility .card:nth-child(4)::before {
+.sectionFacility .card:nth-child(4)::before {
   background-image: url("/images/consultation-family.jpg");
 }
 
@@ -429,7 +415,7 @@
   padding-bottom: 24px;
 }
 
-#pride .card h3 {
+.sectionPride .card h3 {
   color: var(--accent-strong);
 }
 
@@ -661,7 +647,7 @@
   font-size: 1.4rem;
   line-height: 1.8;
   letter-spacing: 0.05em;
-  font: inherit;
+  font-family: inherit;
 }
 
 .field input::placeholder,
