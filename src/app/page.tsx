@@ -1,4 +1,7 @@
-﻿import { lpContent, type ContactField, type ContactFieldType } from "./content";
+﻿import { lpContent } from "./content";
+import { ContactForm } from "./components/ContactForm";
+import { CtaButtons } from "./components/CtaButtons";
+import { RevealProvider } from "./components/RevealProvider";
 import styles from "./page.module.css";
 
 type SearchParams = {
@@ -78,69 +81,13 @@ export default async function Home({
     { key: "business", label: "事業内容", value: lpContent.company.businessContent },
   ];
 
-  const selectOptionsPlaceholder = "選択してください";
-  const revealScript = `(() => {
-    const setup = () => {
-      if (window.__lianHeartRevealInit) {
-        return;
-      }
-
-      window.__lianHeartRevealInit = true;
-
-      const targets = document.querySelectorAll("[data-reveal]");
-      if (!targets.length) {
-        return;
-      }
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) {
-              return;
-            }
-
-            const element = entry.target;
-            const delay = element.getAttribute("data-delay");
-
-            if (delay) {
-              element.style.setProperty("--reveal-delay", delay + "ms");
-            }
-
-            element.classList.add("is-inview");
-
-            if (element.hasAttribute("data-wipe")) {
-              element.classList.add("is-animating");
-              window.setTimeout(() => element.classList.remove("is-animating"), 1200);
-            }
-
-            observer.unobserve(element);
-          });
-        },
-        {
-          threshold: 0.18,
-          rootMargin: "0px 0px -12% 0px",
-        },
-      );
-
-      targets.forEach((element) => observer.observe(element));
-    };
-
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", setup, { once: true });
-      return;
-    }
-
-    setup();
-  })();`;
-
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <script dangerouslySetInnerHTML={{ __html: revealScript }} />
-
+      <RevealProvider>
       <main className={styles.page}>
         <header className={styles.header}>
           <a className={styles.logo} href="#">
@@ -169,23 +116,7 @@ export default async function Home({
             </ul>
 
             <div className={styles.actions}>
-              {lpContent.ctas.map((cta, index) => (
-                <a
-                  key={cta.label}
-                  className={
-                    index === 0
-                      ? styles.primaryAction
-                      : index === 1
-                        ? styles.secondaryAction
-                        : styles.ghostAction
-                  }
-                  href={cta.href}
-                  target={cta.href.startsWith("http") ? "_blank" : undefined}
-                  rel={cta.href.startsWith("http") ? "noreferrer" : undefined}
-                >
-                  {cta.label}
-                </a>
-              ))}
+              <CtaButtons ctas={lpContent.ctas} />
             </div>
           </div>
 
@@ -198,7 +129,7 @@ export default async function Home({
           />
         </section>
 
-        <section id="concept" className={styles.section}>
+        <section id="concept" className={`${styles.section} ${styles.sectionConcept}`}>
           <div className={styles.sectionHeader} data-reveal="up">
             <p className={styles.sectionLabel}>{lpContent.concept.label}</p>
             <h2>{lpContent.concept.title}</h2>
@@ -222,7 +153,7 @@ export default async function Home({
           </div>
         </section>
 
-        <section id="pride" className={styles.section}>
+        <section id="pride" className={`${styles.section} ${styles.sectionPride}`}>
           <div className={styles.sectionHeader} data-reveal="up">
             <p className={styles.sectionLabel}>{lpContent.features.label}</p>
             <h2>{lpContent.features.title}</h2>
@@ -239,7 +170,7 @@ export default async function Home({
           </div>
         </section>
 
-        <section id="menu" className={styles.section}>
+        <section id="menu" className={`${styles.section} ${styles.sectionMenu}`}>
           <div className={styles.sectionHeader} data-reveal="up">
             <p className={styles.sectionLabel}>{lpContent.flow.label}</p>
             <h2>{lpContent.flow.title}</h2>
@@ -256,7 +187,7 @@ export default async function Home({
           <p className={styles.sampleNote}>{lpContent.flow.note}</p>
         </section>
 
-        <section id="greeting" className={styles.section}>
+        <section id="greeting" className={`${styles.section} ${styles.sectionGreeting}`}>
           <div className={styles.sectionHeader} data-reveal="up">
             <p className={styles.sectionLabel}>{lpContent.greeting.label}</p>
             <h2>{lpContent.greeting.title}</h2>
@@ -298,7 +229,7 @@ export default async function Home({
           </div>
         </section>
 
-        <section id="facility" className={styles.section}>
+        <section id="facility" className={`${styles.section} ${styles.sectionFacility}`}>
           <div className={styles.sectionHeader} data-reveal="up">
             <p className={styles.sectionLabel}>{lpContent.facilities.label}</p>
             <h2>{lpContent.facilities.title}</h2>
@@ -342,7 +273,7 @@ export default async function Home({
           </div>
         </section>
 
-        <section id="contact" className={styles.section}>
+        <section id="contact" className={`${styles.section} ${styles.sectionContact}`}>
           <div className={styles.sectionHeader} data-reveal="up">
             <p className={styles.sectionLabel}>{lpContent.contact.label}</p>
             <h2>{lpContent.contact.title}</h2>
@@ -353,108 +284,17 @@ export default async function Home({
           <div className={styles.contactLayout}>
             <div className={styles.contactCard} data-reveal="up" data-delay={60}>
               <div className={styles.ctaStack}>
-                {lpContent.ctas.map((cta, index) => (
-                  <a
-                    key={cta.label}
-                    className={
-                      index === 0
-                        ? styles.primaryAction
-                        : index === 1
-                          ? styles.secondaryAction
-                          : styles.ghostAction
-                    }
-                    href={cta.href}
-                    target={cta.href.startsWith("http") ? "_blank" : undefined}
-                    rel={cta.href.startsWith("http") ? "noreferrer" : undefined}
-                  >
-                    {cta.label}
-                  </a>
-                ))}
+                <CtaButtons ctas={lpContent.ctas} />
               </div>
             </div>
 
-            <div className={styles.formCard} data-reveal="up" data-delay={140}>
-              <div className={styles.formIntro}>
-                <h3>{lpContent.contact.formTitle}</h3>
-                <p>{lpContent.contact.formDescription}</p>
-              </div>
-
-              {submitMessage ? <p className={styles.formMessage}>{submitMessage}</p> : null}
-
-              <form id="contact-form" className={styles.form} action="/api/contact" method="post">
-                <label className={styles.honeypot} aria-hidden>
-                  <span>内容入力エリア（自動送信対策）</span>
-                  <input type="text" name="hp" tabIndex={-1} autoComplete="off" />
-                </label>
-
-                {lpContent.contact.formFields.map((field) => {
-                  const formField = field as ContactField;
-                  const fieldType = formField.type as ContactFieldType;
-
-                  if (fieldType === "textarea") {
-                    return (
-                      <label key={formField.name} className={styles.field}>
-                        <span>{formField.label}</span>
-                        <textarea
-                          name={formField.name}
-                          rows={5}
-                          required={formField.required}
-                          placeholder={formField.placeholder}
-                        />
-                      </label>
-                    );
-                  }
-
-                  if (fieldType === "checkbox") {
-                    return (
-                      <label key={formField.name} className={styles.fieldCheckbox}>
-                        <input
-                          name={formField.name}
-                          type="checkbox"
-                          required={formField.required}
-                          value="同意"
-                        />
-                        <span>{formField.label}</span>
-                      </label>
-                    );
-                  }
-
-                  if (fieldType === "select") {
-                    return (
-                      <label key={formField.name} className={styles.field}>
-                        <span>{formField.label}</span>
-                        <select name={formField.name} required={formField.required} defaultValue="">
-                          <option value="" disabled>
-                            {selectOptionsPlaceholder}
-                          </option>
-                          {formField.options?.map((option) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </select>
-                      </label>
-                    );
-                  }
-
-                  return (
-                    <label key={formField.name} className={styles.field}>
-                      <span>{formField.label}</span>
-                      <input
-                        name={formField.name}
-                        type={fieldType}
-                        required={formField.required}
-                        placeholder={formField.placeholder}
-                      />
-                    </label>
-                  );
-                })}
-
-                <button className={styles.submitButton} type="submit">
-                  {lpContent.contact.submitLabel}
-                </button>
-              </form>
-            </div>
+            <ContactForm
+              formFields={lpContent.contact.formFields}
+              submitLabel={lpContent.contact.submitLabel}
+              submitMessage={submitMessage}
+              formTitle={lpContent.contact.formTitle}
+              formDescription={lpContent.contact.formDescription}
+            />
           </div>
         </section>
 
@@ -478,6 +318,7 @@ export default async function Home({
           <p className={styles.footerCopyright}>{lpContent.footer.copyright}</p>
         </footer>
       </main>
+      </RevealProvider>
     </>
   );
 }
