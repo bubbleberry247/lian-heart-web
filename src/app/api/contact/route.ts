@@ -132,6 +132,12 @@ function redirectWithStatus(request: NextRequest, contact: "success" | "error") 
 
 export async function POST(request: NextRequest) {
   try {
+    // Next.js版は公開停止中。WordPress本番のみ稼働。
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? '';
+    if (!siteUrl) {
+      return NextResponse.redirect(new URL('/?contact=error#contact', request.url), 303);
+    }
+
     // A. Origin検証
     if (!isOriginAllowed(request)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });

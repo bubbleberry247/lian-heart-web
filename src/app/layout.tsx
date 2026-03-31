@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: lpContent.metadata.title,
   description: lpContent.metadata.description,
   applicationName: lpContent.brand,
+  robots: { index: false, follow: false },
   openGraph: {
     title: lpContent.metadata.title,
     description: lpContent.metadata.description,

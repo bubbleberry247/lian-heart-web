@@ -292,6 +292,13 @@ function lh_register_acf_fields() {
                     lh_acf_text('field_lh_company_title', 'タイトル', 'title'),
                     lh_acf_image('field_lh_company_visual', '左ビジュアル', 'visual'),
                     array(
+                        'key'          => 'field_lh_company_maps_embed_url',
+                        'label'        => 'Google Maps 埋め込みURL',
+                        'name'         => 'maps_embed_url',
+                        'type'         => 'url',
+                        'instructions' => 'Google Maps の埋め込みURL を入力してください',
+                    ),
+                    array(
                         'key' => 'field_lh_company_rows',
                         'label' => '会社情報',
                         'name' => 'rows',
@@ -344,6 +351,28 @@ function lh_register_acf_fields() {
                     lh_acf_text('field_lh_contact_recipient_email', '通知先メールアドレス', 'recipient_email'),
                 ),
             ),
+        ),
+    ));
+
+    acf_add_local_field_group(array(
+        'key' => 'group_lh_knowledge_article',
+        'title' => 'Knowledge Article',
+        'location' => array(
+            array(
+                array(
+                    'param' => 'page_template',
+                    'operator' => '==',
+                    'value' => 'page-templates/template-knowledge-article.php',
+                ),
+            ),
+        ),
+        'style' => 'seamless',
+        'fields' => array(
+            lh_acf_text('field_lh_article_en_label', '英字ラベル', 'lh_article_en_label'),
+            lh_acf_textarea('field_lh_article_lead', 'リード', 'lh_article_lead', 4),
+            lh_acf_image('field_lh_article_hero_image', 'ヒーロー画像', 'lh_article_hero_image'),
+            lh_acf_text('field_lh_article_cta_title', 'CTA見出し', 'lh_article_cta_title'),
+            lh_acf_textarea('field_lh_article_cta_body', 'CTA本文', 'lh_article_cta_body', 3),
         ),
     ));
 }

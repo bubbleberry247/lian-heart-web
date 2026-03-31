@@ -378,14 +378,17 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
         <div class="constrained-content">
             <?php echo lh_render_headline($company['en_label'], $company['title'], array('section', 'shop-info')); ?>
             <div class="shop-info__body">
+                <?php $maps_url = $company['maps_embed_url'] ?? ''; ?>
+                <?php if ($maps_url !== '') : ?>
                 <figure class="shop-visual shop-visual--map">
                     <iframe
-                        src="https://www.google.com/maps?q=%E6%84%9B%E7%9F%A5%E7%9C%8C%E5%BA%81&z=16&output=embed"
-                        title="愛知県庁の地図"
+                        src="<?php echo esc_url($maps_url); ?>"
+                        title="リアンハート所在地の地図"
                         loading="lazy"
                         allowfullscreen
                         referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </figure>
+                <?php endif; ?>
                 <div class="shop-info__guts">
                     <table class="shop-info-table">
                         <tbody>

@@ -33,20 +33,13 @@ function lh_contact_mail_body(array $payload) {
         '',
         '送信日時: ' . $payload['submitted_at'],
         'お名前: ' . $payload['name'],
-        'フリガナ: ' . $payload['furigana'],
-        '電話番号: ' . $payload['phone'],
         'メールアドレス: ' . $payload['email'],
-        'ご本人との関係: ' . $payload['relationship'],
-        '希望エリア: ' . $payload['area'],
-        '希望する施設の種類: ' . $payload['facility_type'],
-        '介護度: ' . $payload['care_level'],
-        'ご予算: ' . $payload['budget'],
-        '入居希望時期: ' . $payload['move_in_date'],
+        '電話番号: ' . $payload['phone'],
         'プライバシーポリシー同意: ' . ($payload['privacy'] === '1' ? '同意済み' : '未同意'),
         '送信元URL: ' . $payload['source_url'],
         'ユーザーエージェント: ' . $payload['user_agent'],
         '',
-        '入居相談内容:',
+        'お問い合わせ内容:',
         $payload['message'] !== '' ? $payload['message'] : '（未入力）',
     );
 
@@ -76,17 +69,29 @@ function lh_handle_contact_submission(WP_REST_Request $request) {
         return rest_ensure_response(array('message' => 'ok'));
     }
 
+    // --- Submission ID ---
+    $submission_id = date('Ymd-His') . '-' . wp_rand(1000, 9999);
+
+    // --- Rate limiting (transient-based, 3 requests / 60 seconds per IP) ---
+    $client_ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $rate_key  = 'lh_rate_' . md5($client_ip);
+    $attempts  = (int) get_transient($rate_key);
+
+    if ($attempts >= 3) {
+        error_log(sprintf('[LH Contact] RATE_LIMITED ip=%s attempts=%d', $client_ip, $attempts));
+        return new WP_Error(
+            'lh_rate_limited',
+            '送信回数の上限に達しました。しばらくしてからお試しください。',
+            array('status' => 429)
+        );
+    }
+
+    set_transient($rate_key, $attempts + 1, 60);
+
     $payload = array(
         'name'          => sanitize_text_field($params['name'] ?? ''),
-        'furigana'      => sanitize_text_field($params['furigana'] ?? ''),
-        'phone'         => sanitize_text_field($params['phone'] ?? ''),
         'email'         => sanitize_email($params['email'] ?? ''),
-        'relationship'  => sanitize_text_field($params['relationship'] ?? ''),
-        'area'          => sanitize_text_field($params['area'] ?? ''),
-        'facility_type' => sanitize_text_field($params['facility_type'] ?? ''),
-        'care_level'    => sanitize_text_field($params['care_level'] ?? ''),
-        'budget'        => sanitize_text_field($params['budget'] ?? ''),
-        'move_in_date'  => sanitize_text_field($params['move_in_date'] ?? ''),
+        'phone'         => sanitize_text_field($params['phone'] ?? ''),
         'message'       => sanitize_textarea_field($params['message'] ?? ''),
         'privacy'       => !empty($params['privacy']) ? '1' : '0',
         'source_url'    => esc_url_raw($params['source_url'] ?? home_url('/')),
@@ -94,7 +99,19 @@ function lh_handle_contact_submission(WP_REST_Request $request) {
         'submitted_at'  => current_time('c'),
     );
 
-    if ($payload['name'] === '' || $payload['phone'] === '' || $payload['privacy'] !== '1') {
+    if (
+        $payload['name'] === '' ||
+        $payload['email'] === '' ||
+        !is_email($payload['email']) ||
+        $payload['phone'] === '' ||
+        $payload['message'] === '' ||
+        $payload['privacy'] !== '1'
+    ) {
+        error_log(sprintf(
+            '[LH Contact] REJECT id=%s ip=%s reason=validation_failed',
+            $submission_id,
+            $_SERVER['REMOTE_ADDR'] ?? 'unknown'
+        ));
         return new WP_Error(
             'lh_invalid_contact',
             '必須項目を確認してください。',
@@ -125,12 +142,27 @@ function lh_handle_contact_submission(WP_REST_Request $request) {
     );
 
     if (!$sent) {
+        error_log(sprintf(
+            '[LH Contact] FAIL id=%s name=%s email=%s ip=%s reason=mail_delivery_failed',
+            $submission_id,
+            $payload['name'],
+            $payload['email'],
+            $_SERVER['REMOTE_ADDR'] ?? 'unknown'
+        ));
         return new WP_Error(
             'lh_contact_delivery_failed',
             '送信に失敗しました。',
             array('status' => 502)
         );
     }
+
+    error_log(sprintf(
+        '[LH Contact] OK id=%s name=%s email=%s ip=%s',
+        $submission_id,
+        $payload['name'],
+        $payload['email'],
+        $_SERVER['REMOTE_ADDR'] ?? 'unknown'
+    ));
 
     return rest_ensure_response(array(
         'message' => '送信ありがとうございました。内容を確認のうえご連絡いたします。',

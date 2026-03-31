@@ -365,8 +365,8 @@ function lh_theme_defaults() {
         'greeting' => array(
             'en_label'  => 'Greeting',
             'title'     => '代表挨拶',
-            'name'      => '山田 太郎',
-            'role'      => '代表',
+            'name'      => '西田 江里',
+            'role'      => '代表取締役',
             'body'      => array(
                 '納得できる入居相談を、すべてのご家族へ。',
                 '愛知で老人ホーム紹介を検討される方の多くは、急な退院や介護負担の増加など、時間の余裕がない中で判断を迫られます。',
@@ -427,13 +427,14 @@ function lh_theme_defaults() {
             ),
         ),
         'company' => array(
-            'en_label' => 'Company',
-            'title'    => '運営会社',
-            'visual'   => null,
-            'rows'     => array(
+            'en_label'       => 'Company',
+            'title'          => '運営会社',
+            'visual'         => null,
+            'maps_embed_url' => 'https://www.google.com/maps?q=%E6%84%9B%E7%9F%A5%E7%9C%8C%E5%90%8D%E5%8F%A4%E5%B1%8B%E5%B8%82%E4%B8%AD%E6%9D%91%E5%8C%BA%E5%90%8D%E9%A7%854-24-5&z=17&output=embed',
+            'rows'           => array(
                 array('label' => '会社名', 'value' => 'リアンハート'),
-                array('label' => '代表者', 'value' => '山田 太郎（サンプル）'),
-                array('label' => '所在地', 'value' => '〒460-0000 愛知県名古屋市中区○○1-2-3 ○○ビル5F'),
+                array('label' => '代表者', 'value' => '西田 江里'),
+                array('label' => '所在地', 'value' => '〒450-0002 愛知県名古屋市中村区名駅4丁目24番5号 第2森ビル401'),
                 array('label' => '電話番号', 'value' => '052-000-0000'),
                 array('label' => 'FAX', 'value' => '052-000-0001'),
                 array('label' => 'メール', 'value' => 'info@example.co.jp'),
@@ -622,6 +623,47 @@ function lh_register_theme_supports() {
     add_image_size('lh-square', 960, 960, true);
 }
 add_action('after_setup_theme', 'lh_register_theme_supports');
+
+function lh_document_title_parts($title) {
+    $brand = lh_theme_data()['brand'] ?? array();
+    $site_name = $brand['site_name'] ?? '';
+    $tagline = $brand['tagline'] ?? '';
+
+    if (empty($title['title'])) {
+        $title['title'] = $site_name;
+    }
+    if (empty($title['site']) && $site_name !== '') {
+        $title['site'] = $site_name;
+    }
+    if (empty($title['tagline']) && $tagline !== '' && is_front_page()) {
+        $title['tagline'] = $tagline;
+    }
+    return $title;
+}
+add_filter('document_title_parts', 'lh_document_title_parts');
+
+function lh_override_site_icon($url) {
+    if ($url !== '') {
+        return $url;
+    }
+    $brand = lh_theme_data()['brand'] ?? array();
+    return $brand['logo'] ?? '';
+}
+add_filter('get_site_icon_url', 'lh_override_site_icon');
+
+function lh_output_favicon() {
+    if (has_site_icon()) {
+        return;
+    }
+    $brand = lh_theme_data()['brand'] ?? array();
+    $logo_url = $brand['logo'] ?? '';
+    if ($logo_url === '') {
+        return;
+    }
+    echo '<link rel="icon" href="' . esc_url($logo_url) . '" type="image/png" sizes="any">' . "\n";
+    echo '<link rel="apple-touch-icon" href="' . esc_url($logo_url) . '">' . "\n";
+}
+add_action('wp_head', 'lh_output_favicon', 1);
 
 function lh_enqueue_assets() {
     $theme_version = lh_theme_version();
