@@ -78,7 +78,7 @@ function lh_handle_contact_submission(WP_REST_Request $request) {
     $attempts  = (int) get_transient($rate_key);
 
     if ($attempts >= 3) {
-        error_log(sprintf('[LH Contact] RATE_LIMITED ip=%s attempts=%d', $client_ip, $attempts));
+        error_log(sprintf('[LH Contact] RATE_LIMITED id=%s', $submission_id));
         return new WP_Error(
             'lh_rate_limited',
             '送信回数の上限に達しました。しばらくしてからお試しください。',
@@ -107,11 +107,7 @@ function lh_handle_contact_submission(WP_REST_Request $request) {
         $payload['message'] === '' ||
         $payload['privacy'] !== '1'
     ) {
-        error_log(sprintf(
-            '[LH Contact] REJECT id=%s ip=%s reason=validation_failed',
-            $submission_id,
-            $_SERVER['REMOTE_ADDR'] ?? 'unknown'
-        ));
+        error_log(sprintf('[LH Contact] REJECT id=%s reason=validation_failed', $submission_id));
         return new WP_Error(
             'lh_invalid_contact',
             '必須項目を確認してください。',
@@ -142,13 +138,7 @@ function lh_handle_contact_submission(WP_REST_Request $request) {
     );
 
     if (!$sent) {
-        error_log(sprintf(
-            '[LH Contact] FAIL id=%s name=%s email=%s ip=%s reason=mail_delivery_failed',
-            $submission_id,
-            $payload['name'],
-            $payload['email'],
-            $_SERVER['REMOTE_ADDR'] ?? 'unknown'
-        ));
+        error_log(sprintf('[LH Contact] FAIL id=%s reason=mail_delivery_failed', $submission_id));
         return new WP_Error(
             'lh_contact_delivery_failed',
             '送信に失敗しました。',
@@ -156,13 +146,7 @@ function lh_handle_contact_submission(WP_REST_Request $request) {
         );
     }
 
-    error_log(sprintf(
-        '[LH Contact] OK id=%s name=%s email=%s ip=%s',
-        $submission_id,
-        $payload['name'],
-        $payload['email'],
-        $_SERVER['REMOTE_ADDR'] ?? 'unknown'
-    ));
+    error_log(sprintf('[LH Contact] OK id=%s', $submission_id));
 
     return rest_ensure_response(array(
         'message' => '送信ありがとうございました。内容を確認のうえご連絡いたします。',
