@@ -669,7 +669,9 @@ function lh_enqueue_assets() {
     $theme_version = lh_theme_version();
     $style_file = get_stylesheet_directory() . '/style.css';
     $base_reset_file = get_template_directory() . '/assets/css/base-reset.css';
-    $front_css_file = get_template_directory() . '/assets/css/front-page.css';
+    $front_core_css_file = get_template_directory() . '/assets/css/front-page-core.css';
+    $front_sections_css_file = get_template_directory() . '/assets/css/front-page-sections.css';
+    $front_responsive_css_file = get_template_directory() . '/assets/css/front-page-responsive.css';
     $form_css_file = get_template_directory() . '/assets/css/form.css';
     $front_js_file = get_template_directory() . '/assets/js/front-page.js';
     $form_js_file = get_template_directory() . '/assets/js/form.js';
@@ -678,7 +680,9 @@ function lh_enqueue_assets() {
 
     $style_ver = file_exists($style_file) ? (string) filemtime($style_file) : $theme_version;
     $base_reset_ver = file_exists($base_reset_file) ? (string) filemtime($base_reset_file) : $theme_version;
-    $front_css_ver = file_exists($front_css_file) ? (string) filemtime($front_css_file) : $theme_version;
+    $front_core_css_ver = file_exists($front_core_css_file) ? (string) filemtime($front_core_css_file) : $theme_version;
+    $front_sections_css_ver = file_exists($front_sections_css_file) ? (string) filemtime($front_sections_css_file) : $theme_version;
+    $front_responsive_css_ver = file_exists($front_responsive_css_file) ? (string) filemtime($front_responsive_css_file) : $theme_version;
     $form_css_ver = file_exists($form_css_file) ? (string) filemtime($form_css_file) : $theme_version;
     $front_js_ver = file_exists($front_js_file) ? (string) filemtime($front_js_file) : $theme_version;
     $form_js_ver = file_exists($form_js_file) ? (string) filemtime($form_js_file) : $theme_version;
@@ -689,8 +693,10 @@ function lh_enqueue_assets() {
     wp_enqueue_style('lh-google-fonts', 'https://fonts.googleapis.com/css2?family=EB+Garamond:wght@500&family=Montserrat:wght@600;700&display=swap', array(), null);
     wp_enqueue_style('lh-swiper', 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css', array(), '8.4.7');
     wp_enqueue_style('lh-base-reset', get_template_directory_uri() . '/assets/css/base-reset.css', array(), $base_reset_ver);
-    wp_enqueue_style('lh-front-page', get_template_directory_uri() . '/assets/css/front-page.css', array('lh-base-reset', 'lh-google-fonts', 'lh-swiper'), $front_css_ver);
-    wp_enqueue_style('lh-form', get_template_directory_uri() . '/assets/css/form.css', array('lh-front-page'), $form_css_ver);
+    wp_enqueue_style('lh-front-page-core', get_template_directory_uri() . '/assets/css/front-page-core.css', array('lh-base-reset', 'lh-google-fonts', 'lh-swiper'), $front_core_css_ver);
+    wp_enqueue_style('lh-front-page-sections', get_template_directory_uri() . '/assets/css/front-page-sections.css', array('lh-front-page-core'), $front_sections_css_ver);
+    wp_enqueue_style('lh-front-page-responsive', get_template_directory_uri() . '/assets/css/front-page-responsive.css', array('lh-front-page-sections'), $front_responsive_css_ver);
+    wp_enqueue_style('lh-form', get_template_directory_uri() . '/assets/css/form.css', array('lh-front-page-responsive'), $form_css_ver);
 
     wp_enqueue_script('lh-swiper', 'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js', array(), '8.4.7', true);
     wp_enqueue_script('lh-gsap', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.7/gsap.min.js', array(), '3.12.7', true);
@@ -700,7 +706,7 @@ function lh_enqueue_assets() {
     wp_enqueue_script('lh-form', get_template_directory_uri() . '/assets/js/form.js', array(), $form_js_ver, true);
 
     if (is_page_template('page-templates/template-knowledge-article.php')) {
-        wp_enqueue_style('lh-knowledge-article', get_template_directory_uri() . '/assets/css/knowledge-article.css', array('lh-front-page'), $knowledge_article_css_ver);
+        wp_enqueue_style('lh-knowledge-article', get_template_directory_uri() . '/assets/css/knowledge-article.css', array('lh-front-page-responsive'), $knowledge_article_css_ver);
         wp_enqueue_script('lh-knowledge-article', get_template_directory_uri() . '/assets/js/knowledge-article.js', array('lh-front-page'), $knowledge_article_js_ver, true);
     }
 
