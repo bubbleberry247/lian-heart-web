@@ -1,0 +1,6 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1920" viewBox="0 0 1440 1920" fill="none">
+  <rect width="1440" height="1920" fill="#FDE8EB"/>
+  <rect x="24" y="24" width="1392" height="1872" rx="24" stroke="#F495A2" stroke-width="6" stroke-dasharray="18 12"/>
+  <text x="50%" y="46%" text-anchor="middle" fill="#0C1C1F" font-family="Yu Gothic, YuGothic, sans-serif" font-size="86" font-weight="700">HERO 03 MOBILE</text>
+  <text x="50%" y="56%" text-anchor="middle" fill="#E0354C" font-family="Montserrat, Yu Gothic, sans-serif" font-size="40" font-weight="700">1440x1920</text>
+</svg>

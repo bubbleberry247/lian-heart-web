@@ -13,6 +13,7 @@ $timing = $theme['timing'];
 $concept = $theme['concept'];
 $pride = $theme['pride'];
 $menu = $theme['menu'];
+$partner_support = $theme['partner_support'];
 $greeting = $theme['greeting'];
 $knowledge = $theme['knowledge'];
 $qa = $theme['qa'];
@@ -245,6 +246,59 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
         </div>
     </section>
 
+    <section class="section partner-support" id="partner-support">
+        <div class="constrained-content">
+            <?php
+            $partner_support_referrer_url = trim((string) ($partner_support['referrer_link_url'] ?? ''));
+            if ($partner_support_referrer_url === '') {
+                $partner_support_referrer_url = lh_get_referrer_page_url();
+            }
+            ?>
+            <?php echo lh_render_headline($partner_support['headline_en'] ?? 'SUPPORT', $partner_support['headline_ja'] ?? '必要な相談先も、状況に応じてご案内します', array('section', 'partner-support')); ?>
+            <div class="partner-support__intro">
+                <?php foreach (lh_paragraphs($partner_support['intro'] ?? '') as $paragraph) : ?>
+                    <p><?php echo esc_html($paragraph); ?></p>
+                <?php endforeach; ?>
+            </div>
+            <div class="partner-support__grid">
+                <?php foreach ((array) ($partner_support['cards'] ?? array()) as $card) : ?>
+                    <?php
+                    $title = trim((string) ($card['title'] ?? ''));
+                    $body = lh_paragraphs($card['body'] ?? '');
+                    if ($title === '' && empty($body)) {
+                        continue;
+                    }
+                    ?>
+                    <article class="partner-support-card js-knowledge-card-fx">
+                        <?php if ($title !== '') : ?>
+                            <h3 class="partner-support-card__title"><?php echo esc_html($title); ?></h3>
+                        <?php endif; ?>
+                        <div class="partner-support-card__body">
+                            <?php foreach ($body as $paragraph) : ?>
+                                <p><?php echo esc_html($paragraph); ?></p>
+                            <?php endforeach; ?>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+            <div class="timing__actions partner-support__actions">
+                <?php
+                echo lh_render_button(
+                    array(
+                        'label' => $partner_support['cta_label'] ?? 'まずは状況を相談する',
+                        'url' => $partner_support['cta_url'] ?? '#contact',
+                        'style' => 'primary',
+                    ),
+                    'partner-support__action'
+                );
+                ?>
+                <?php if (!empty($partner_support['referrer_link_label'])) : ?>
+                    <a class="partner-support__referrer-link" href="<?php echo esc_url($partner_support_referrer_url); ?>"><?php echo esc_html($partner_support['referrer_link_label']); ?></a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </section>
+
     <section class="greeting wp-custom-section js-greeting" id="greeting">
         <?php
         $greeting_image = lh_resolve_image($greeting['image'] ?? null, $greeting['name'] ?? 'Greeting', 1200, 1400);
@@ -378,17 +432,14 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
         <div class="constrained-content">
             <?php echo lh_render_headline($company['en_label'], $company['title'], array('section', 'shop-info')); ?>
             <div class="shop-info__body">
-                <?php $maps_url = $company['maps_embed_url'] ?? ''; ?>
-                <?php if ($maps_url !== '') : ?>
                 <figure class="shop-visual shop-visual--map">
                     <iframe
-                        src="<?php echo esc_url($maps_url); ?>"
-                        title="リアンハート所在地の地図"
+                        src="https://www.google.com/maps?q=%E6%84%9B%E7%9F%A5%E7%9C%8C%E5%BA%81&z=16&output=embed"
+                        title="愛知県庁の地図"
                         loading="lazy"
                         allowfullscreen
                         referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </figure>
-                <?php endif; ?>
                 <div class="shop-info__guts">
                     <table class="shop-info-table">
                         <tbody>
@@ -486,8 +537,8 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
                                 }
                             }
                             ?>
-                            <details class="privacy-policy-box" id="privacy-policy" tabindex="-1" aria-label="プライバシーポリシー">
-                                <summary class="privacy-policy-box__summary">プライバシーポリシー（クリックで展開）</summary>
+                            <div class="privacy-policy-box" id="privacy-policy" tabindex="-1" aria-label="プライバシーポリシー">
+                                <h4>プライバシーポリシー</h4>
                                 <div class="privacy-policy-box__body">
                                     <p><?php echo esc_html($privacy_company_name); ?>（以下「当社」）は、愛知県全域での老人ホーム紹介、介護施設紹介、入居相談に関するサービスを提供するにあたり、個人情報の保護を重要な責務と考え、以下の方針に基づいて適切に取り扱います。</p>
                                     <p>1. 取得する個人情報</p>
@@ -509,7 +560,7 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
                                     <p>8. 改定</p>
                                     <p>本ポリシーは、法令改正や運用見直しに応じて改定することがあります。改定後の内容は、本サイトに掲載した時点で効力を生じます。</p>
                                 </div>
-                            </details>
+                            </div>
                             <label class="contact-field contact-field--privacy">
                                 <input type="checkbox" name="privacy" value="1" required>
                                 <span><a href="#privacy-policy">プライバシーポリシー</a>に同意する<span class="required">*</span></span>

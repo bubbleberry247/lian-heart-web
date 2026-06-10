@@ -1,0 +1,29 @@
+﻿# Media Slots
+
+Generated placeholders live in ssets/placeholders/.
+
+Use the JPG filename column when you prepare final photos.
+
+| No | Final filename | Placeholder | Size | Purpose |
+| --- | --- | --- | --- | --- |
+| 01 | 01-hero-slide-01-desktop.jpg | 01-hero-slide-01-desktop.svg | 2560x1440 | desktop hero slide 1 |
+| 02 | 02-hero-slide-01-mobile.jpg | 02-hero-slide-01-mobile.svg | 1440x1920 | mobile hero slide 1 |
+| 03 | 03-hero-slide-02-desktop.jpg | 03-hero-slide-02-desktop.svg | 2560x1440 | desktop hero slide 2 |
+| 04 | 04-hero-slide-02-mobile.jpg | 04-hero-slide-02-mobile.svg | 1440x1920 | mobile hero slide 2 |
+| 05 | 05-hero-slide-03-desktop.jpg | 05-hero-slide-03-desktop.svg | 2560x1440 | desktop hero slide 3 |
+| 06 | 06-hero-slide-03-mobile.jpg | 06-hero-slide-03-mobile.svg | 1440x1920 | mobile hero slide 3 |
+| 07 | 07-concept-visual-01.jpg | 07-concept-visual-01.svg | 1200x1600 | concept portrait 1 |
+| 08 | 08-concept-visual-02.jpg | 08-concept-visual-02.svg | 1200x1200 | concept square 2 |
+| 09 | 09-concept-visual-03.jpg | 09-concept-visual-03.svg | 2400x1600 | concept landscape 3 |
+| 10 | 10-service-feature-01.jpg | 10-service-feature-01.svg | 2400x1600 | service feature 1 |
+| 11 | 11-service-feature-02.jpg | 11-service-feature-02.svg | 2400x1600 | service feature 2 |
+| 12 | 12-service-feature-03.jpg | 12-service-feature-03.svg | 2400x1600 | service feature 3 |
+| 13 | 13-service-aside.jpg | 13-service-aside.svg | 2400x1350 | service aside visual |
+| 14 | 14-support-flow-01.jpg | 14-support-flow-01.svg | 2400x1600 | support flow 1 |
+| 15 | 15-support-flow-02.jpg | 15-support-flow-02.svg | 2400x1600 | support flow 2 |
+| 16 | 16-support-flow-03.jpg | 16-support-flow-03.svg | 2400x1600 | support flow 3 |
+| 17 | 17-facility-type-01.jpg | 17-facility-type-01.svg | 1200x800 | facility type 1 |
+| 18 | 18-facility-type-02.jpg | 18-facility-type-02.svg | 1200x800 | facility type 2 |
+| 19 | 19-facility-type-03.jpg | 19-facility-type-03.svg | 1200x800 | facility type 3 |
+| 20 | 20-facility-type-04.jpg | 20-facility-type-04.svg | 1200x800 | facility type 4 |
+| 21 | 21-company-visual.jpg | 21-company-visual.svg | 1200x800 | company visual |

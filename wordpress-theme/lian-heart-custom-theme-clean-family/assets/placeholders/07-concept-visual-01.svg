@@ -1,0 +1,6 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1600" viewBox="0 0 1200 1600" fill="none">
+  <rect width="1200" height="1600" fill="#FDE8EB"/>
+  <rect x="24" y="24" width="1152" height="1552" rx="24" stroke="#F495A2" stroke-width="6" stroke-dasharray="18 12"/>
+  <text x="50%" y="46%" text-anchor="middle" fill="#0C1C1F" font-family="Yu Gothic, YuGothic, sans-serif" font-size="72" font-weight="700">CONCEPT 01</text>
+  <text x="50%" y="56%" text-anchor="middle" fill="#E0354C" font-family="Montserrat, Yu Gothic, sans-serif" font-size="34" font-weight="700">1200x1600</text>
+</svg>
