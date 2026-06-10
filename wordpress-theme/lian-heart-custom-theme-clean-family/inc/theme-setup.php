@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -474,8 +474,8 @@ function lh_theme_defaults() {
         'greeting' => array(
             'en_label'  => 'Greeting',
             'title'     => '代表挨拶',
-            'name'      => '山田 太郎',
-            'role'      => '代表',
+            'name'      => '西田 江里',
+            'role'      => '代表取締役',
             'body'      => array(
                 '納得できる入居相談を、すべてのご家族へ。',
                 '愛知で老人ホーム紹介を検討される方の多くは、急な退院や介護負担の増加など、時間の余裕がない中で判断を迫られます。',
@@ -541,8 +541,8 @@ function lh_theme_defaults() {
             'visual'   => null,
             'rows'     => array(
                 array('label' => '会社名', 'value' => 'リアンハート'),
-                array('label' => '代表者', 'value' => '山田 太郎（サンプル）'),
-                array('label' => '所在地', 'value' => '〒460-0000 愛知県名古屋市中区○○1-2-3 ○○ビル5F'),
+                array('label' => '代表者', 'value' => '西田 江里'),
+                array('label' => '所在地', 'value' => '〒450-0002 愛知県名古屋市中村区名駅4丁目24番5号 第2森ビル401'),
                 array('label' => '電話番号', 'value' => '052-000-0000'),
                 array('label' => 'FAX', 'value' => '052-000-0001'),
                 array('label' => 'メール', 'value' => 'info@example.co.jp'),
@@ -905,6 +905,12 @@ function lh_should_noindex() {
         return (bool) LH_FORCE_NOINDEX;
     }
 
+    // WP管理画面「設定 > 表示設定 > 検索エンジンがインデックスしないようにする」が
+    // ONのとき(blog_public=0)も noindex にする。公開切替を管理画面のチェックで行える。
+    if (get_option('blog_public') === '0') {
+        return true;
+    }
+
     $host = wp_parse_url(home_url('/'), PHP_URL_HOST);
     $host = strtolower((string) ($host ?: ($_SERVER['HTTP_HOST'] ?? '')));
 
@@ -1265,4 +1271,79 @@ function lh_register_options_page() {
     ));
 }
 add_action('acf/init', 'lh_register_options_page');
+
+/* ============================================================
+ * Security hardening
+ * この区切り以降を削除すれば従来挙動に戻せる（ロールバック単位）。
+ * すべて管理画面(is_admin)は対象外。
+ * ============================================================ */
+
+// 1. WordPress バージョン情報の露出を抑止（generator meta / RSS generator）
+remove_action('wp_head', 'wp_generator');
+add_filter('the_generator', '__return_empty_string');
+
+// 2-a. REST API の users エンドポイントを公開しない（メール/ログイン名の列挙防止）
+function lh_restrict_rest_users($endpoints) {
+    if (isset($endpoints['/wp/v2/users'])) {
+        unset($endpoints['/wp/v2/users']);
+    }
+    if (isset($endpoints['/wp/v2/users/(?P<id>[\d]+)'])) {
+        unset($endpoints['/wp/v2/users/(?P<id>[\d]+)']);
+    }
+    return $endpoints;
+}
+add_filter('rest_endpoints', 'lh_restrict_rest_users');
+
+// 2-b. 著者アーカイブ(/author/...)を無効化してトップへ301
+function lh_disable_author_archive() {
+    if (is_author()) {
+        wp_safe_redirect(home_url('/'), 301);
+        exit;
+    }
+}
+add_action('template_redirect', 'lh_disable_author_archive');
+add_filter('author_link', function () {
+    return home_url('/');
+});
+
+// 2-c. ?author=N によるID→ログイン名の逆引きをトップへ301
+function lh_block_author_query() {
+    if (is_admin()) {
+        return;
+    }
+    if (isset($_GET['author']) && preg_match('/^\d+$/', (string) $_GET['author'])) {
+        wp_safe_redirect(home_url('/'), 301);
+        exit;
+    }
+}
+add_action('init', 'lh_block_author_query');
+
+// 3. XML-RPC を無効化（Pingback ヘッダも除去）
+add_filter('xmlrpc_enabled', '__return_false');
+add_filter('xmlrpc_methods', function () {
+    return array();
+});
+add_filter('wp_headers', function ($headers) {
+    unset($headers['X-Pingback']);
+    return $headers;
+});
+
+// 4. セキュリティ HTTP ヘッダー（フロントのみ）
+//    CSP は外部依存(Google Fonts/jsDelivr/cdnjs/GAS/Google Maps)があるため
+//    ここには含めず、サーバー側(.htaccess)で Report-Only から段階導入する。
+function lh_send_security_headers() {
+    if (is_admin()) {
+        return;
+    }
+    header('X-Frame-Options: SAMEORIGIN');
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
+}
+add_action('send_headers', 'lh_send_security_headers');
+
+// 5. ログインエラーでユーザー名/パスワードの別を秘匿
+add_filter('login_errors', function () {
+    return 'ログイン情報が正しくありません。';
+});
 

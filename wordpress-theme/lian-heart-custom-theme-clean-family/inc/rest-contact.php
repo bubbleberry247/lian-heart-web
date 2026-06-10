@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -69,6 +69,25 @@ function lh_handle_contact_submission(WP_REST_Request $request) {
         return rest_ensure_response(array('message' => 'ok'));
     }
 
+    // --- Submission ID ---
+    $submission_id = date('Ymd-His') . '-' . wp_rand(1000, 9999);
+
+    // --- Rate limiting (transient-based, 3 requests / 60 seconds per IP) ---
+    $client_ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $rate_key  = 'lh_rate_' . md5($client_ip);
+    $attempts  = (int) get_transient($rate_key);
+
+    if ($attempts >= 3) {
+        error_log(sprintf('[LH Contact] RATE_LIMITED id=%s', $submission_id));
+        return new WP_Error(
+            'lh_rate_limited',
+            '送信回数の上限に達しました。しばらくしてからお試しください。',
+            array('status' => 429)
+        );
+    }
+
+    set_transient($rate_key, $attempts + 1, 60);
+
     $payload = array(
         'name'          => sanitize_text_field($params['name'] ?? ''),
         'email'         => sanitize_email($params['email'] ?? ''),
@@ -88,6 +107,7 @@ function lh_handle_contact_submission(WP_REST_Request $request) {
         $payload['message'] === '' ||
         $payload['privacy'] !== '1'
     ) {
+        error_log(sprintf('[LH Contact] REJECT id=%s reason=validation_failed', $submission_id));
         return new WP_Error(
             'lh_invalid_contact',
             '必須項目を確認してください。',
@@ -118,12 +138,15 @@ function lh_handle_contact_submission(WP_REST_Request $request) {
     );
 
     if (!$sent) {
+        error_log(sprintf('[LH Contact] FAIL id=%s reason=mail_delivery_failed', $submission_id));
         return new WP_Error(
             'lh_contact_delivery_failed',
             '送信に失敗しました。',
             array('status' => 502)
         );
     }
+
+    error_log(sprintf('[LH Contact] OK id=%s', $submission_id));
 
     return rest_ensure_response(array(
         'message' => '送信ありがとうございました。内容を確認のうえご連絡いたします。',
