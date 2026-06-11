@@ -31,6 +31,10 @@ AEO/GEOコンテンツ（4+1ハブ＝記事12本＋信頼基盤4ページ）を�
 5. knowledge-after-discharge（退院ピラー）の改稿は公開時に手動貼替（content-seeds/knowledge-after-discharge.html）
 6. **次回デプロイ時に inc/content-seeds.php の最新版（3c3ad9d）を含める**: Codexレビュー反映で是正ブロック撤去＋失敗時バージョン非更新に改善。本番は旧v5コードだがoption=5のため再実行されず実害なし（急ぎではない）
 
+## セキュリティTODO（自動レビュー指摘・2026-06-12）
+- **deploy/push-theme-via-sftp.ps1 と deploy/tmp-lftp-*.txt の `set ssl:verify-certificate no`（TLS検証無効）**: 3月からの既存設定。MITMでFTP認証情報が窃取されるリスク。次回デプロイ時に (1)`verify-certificate no` を外して接続テスト（Xserver FTPSは通常正規証明書。失敗ならCygwinのCAバンドルを `ssl:ca-file` で指定） (2)可能なら ftp:// → sftp://（SSH）+ known_hosts へ移行。**動作中の経路なので未テストで書き換えない**
+- FTPアカウント `codexpublic` は一時用途（認証情報は deploy/tmp-lftp-upload.txt ※git管理外）。**公開切替の前にパスワードローテーション推奨**
+
 ## 2026-06-11 追記（git push完了）
 - GPT-5.4コードレビュー: R1=REQUEST_CHANGES（fatal2件: 是正ブロックが将来の再実行で公開済みページを巻き戻す地雷／失敗時もversion更新で部分適用が固定化）→ 修正コミット3c3ad9d → R2=APPROVE → push成功（8227b60..3c3ad9d）
 - 注意: GR-005のverdictキャッシュは手書き転記だと分類器が「偽造」とみなしブロックする。**Codex実出力ファイルからJSONを機械抽出**して作成すること（C:\tmp\codex_output_*.md → codex_verdict_{SHA}.json）
