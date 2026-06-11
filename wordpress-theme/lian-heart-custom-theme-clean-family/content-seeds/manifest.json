@@ -205,7 +205,6 @@
   },
   "about-editorial-policy": {
     "type": "page",
-    "status": "publish",
     "title": "運営者情報・編集方針",
     "lead": "全記事の編集クレジットのリンク先として、リアンハートの運営者情報と編集体制・編集方針を公表するページです。",
     "sources": [
@@ -214,7 +213,6 @@
   },
   "fees-disclosure": {
     "type": "page",
-    "status": "publish",
     "title": "ご相談が無料の理由と手数料の開示",
     "lead": "ご相談者から料金はいただきません。ご入居が決まった場合に、施設側から紹介手数料を受け取る事業モデルだからです。",
     "sources": [
@@ -224,7 +222,6 @@
   },
   "consultation-policy": {
     "type": "page",
-    "status": "publish",
     "title": "相談から入居までの流れと、事例・個人情報の取り扱い方針",
     "lead": "相談は状況の整理から始まり、提案・見学・入居後まで伴走します。事例は同意を得て匿名化した場合のみ掲載します。",
     "sources": [
@@ -233,7 +230,6 @@
   },
   "privacy-policy": {
     "type": "page",
-    "status": "publish",
     "title": "プライバシーポリシー",
     "lead": "要配慮個人情報を扱う相談フォームの法的前提として、個人情報の取得・利用・第三者提供の方針を定めるページです。",
     "sources": [

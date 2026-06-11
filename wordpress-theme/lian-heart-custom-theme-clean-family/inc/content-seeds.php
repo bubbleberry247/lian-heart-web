@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('LH_CONTENT_SEEDS_VERSION', '3');
+define('LH_CONTENT_SEEDS_VERSION', '4');
 
 function lh_content_seed_manifest() {
     $manifest_path = get_template_directory() . '/content-seeds/manifest.json';
@@ -65,37 +65,28 @@ function lh_ensure_content_pages() {
             continue;
         }
 
-        $html_path = $seed_dir . $slug . '.html';
         $existing_page = get_page_by_path($slug);
-        $post_status = (($entry['status'] ?? '') === 'publish') ? 'publish' : 'draft';
 
         if ($existing_page instanceof WP_Post) {
-            if ($post_status === 'publish') {
-                $update = array('ID' => (int) $existing_page->ID);
-
-                if ($existing_page->post_status !== 'publish') {
-                    $update['post_status'] = 'publish';
-                }
-
-                if (
-                    strpos((string) $existing_page->post_content, 'lh-todo') !== false &&
-                    file_exists($html_path)
-                ) {
-                    $replacement = file_get_contents($html_path);
-                    if (is_string($replacement) && trim($replacement) !== '') {
-                        $update['post_content'] = $replacement;
-                    }
-                }
-
-                if (count($update) > 1) {
-                    wp_update_post($update, true);
-                }
+            // 一回限りの是正: プレースホルダー(lh-todo)が残ったまま公開状態に
+            // なっているシード由来ページを下書きへ戻す。公開判断は必ず人間が行う。
+            if (
+                $existing_page->post_status === 'publish' &&
+                strpos((string) $existing_page->post_content, 'lh-todo') !== false
+            ) {
+                wp_update_post(
+                    array(
+                        'ID'          => (int) $existing_page->ID,
+                        'post_status' => 'draft',
+                    ),
+                    true
+                );
             }
-
-            lh_apply_content_seed_meta((int) $existing_page->ID, $entry);
+            // それ以外の既存ページは内容・状態・メタとも一切変更しない。
             continue;
         }
 
+        $html_path = $seed_dir . $slug . '.html';
         if (!file_exists($html_path)) {
             continue;
         }
@@ -105,15 +96,16 @@ function lh_ensure_content_pages() {
             continue;
         }
 
+        // シーダーが作成するページは常に draft。公開はWP管理画面で人間が行う。
         $page_id = wp_insert_post(
             array(
-                'post_type' => 'page',
-                'post_status' => $post_status,
-                'post_title' => (string) ($entry['title'] ?? $slug),
-                'post_name' => $slug,
-                'post_content' => $content,
+                'post_type'      => 'page',
+                'post_status'    => 'draft',
+                'post_title'     => (string) ($entry['title'] ?? $slug),
+                'post_name'      => $slug,
+                'post_content'   => $content,
                 'comment_status' => 'closed',
-                'ping_status' => 'closed',
+                'ping_status'    => 'closed',
             ),
             true
         );
@@ -134,15 +126,6 @@ function lh_ensure_content_pages() {
     update_option('lh_content_seeds_version', LH_CONTENT_SEEDS_VERSION);
 }
 add_action('after_switch_theme', 'lh_ensure_content_pages');
-
-function lh_ensure_content_pages_on_init() {
-    if (is_admin()) {
-        return;
-    }
-
-    lh_ensure_content_pages();
-}
-add_action('init', 'lh_ensure_content_pages_on_init', 20);
 
 function lh_ensure_content_pages_admin() {
     if (!is_admin() || !current_user_can('manage_options')) {
