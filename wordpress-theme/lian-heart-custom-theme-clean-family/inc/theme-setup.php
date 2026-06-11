@@ -206,6 +206,150 @@ function lh_knowledge_article_definitions() {
             'cta_title' => '退院前後の住まい探しを相談したい方へ',
             'cta_body' => '今すぐ決めるべきことと後から詰められることを分けながら、焦らず候補整理を進められます。',
         ),
+        'knowledge-discharge-flow' => array(
+            'slug' => 'knowledge-discharge-flow',
+            'url' => home_url('/knowledge-discharge-flow/'),
+            'en_label' => 'Knowledge',
+            'title' => '病院から施設へ移るには｜退院調整の流れと相談先（地域連携室・MSW・ケアマネ）',
+            'hero_image' => lh_theme_asset_uri('assets/media/support-flow-02.png'),
+            'card_title' => '病院から施設へ移るには｜退院調整の流れと相談先（地域連携室・MSW・ケアマネ）',
+            'card_body' => '病院から施設へ移るまでの流れを解説。MSW・地域連携室・ケアマネジャーの役割と、家族が準備すべきことを整理します。',
+            'lead' => '病院から施設への移行は、病院の医療ソーシャルワーカーと家族・ケアマネジャーが連携して進めるのが基本の流れです。',
+            'cta_title' => '入院中の今から動けば、選択肢は広がります',
+            'cta_body' => '退院予定日をお聞かせください。',
+        ),
+        'knowledge-discharge-options' => array(
+            'slug' => 'knowledge-discharge-options',
+            'url' => home_url('/knowledge-discharge-options/'),
+            'en_label' => 'Knowledge',
+            'title' => '退院後すぐに入れる可能性がある施設はどれ？｜老健・有料老人ホーム・サ高住のつなぎ方',
+            'hero_image' => lh_theme_asset_uri('assets/media/facility-type-02-v2.jpg'),
+            'card_title' => '退院後すぐに入れる可能性がある施設はどれ？｜老健・有料老人ホーム・サ高住のつなぎ方',
+            'card_body' => '退院後の受け皿になりやすい老健・有料老人ホーム・サ高住の役割と「つなぎ方」を解説。特養待機中の組み立て方も紹介します。',
+            'lead' => '退院直後の受け皿は老健・有料老人ホーム・サ高住が中心で、特養は待機を見込んで「つなぎ」と並行して申し込むのが現実的です。',
+            'cta_title' => '「どの種別から当たるべきか」だけでも、状態とご予算を伺えば整理できます',
+            'cta_body' => '退院期限から逆算して、今日からの動き方を一緒に整理しませんか（相談無料）。',
+        ),
+        'knowledge-cost-aichi' => array(
+            'slug' => 'knowledge-cost-aichi',
+            'url' => home_url('/knowledge-cost-aichi/'),
+            'en_label' => 'Knowledge',
+            'title' => '愛知県の老人ホーム費用｜月額10万・15万・20万円で何が違うか',
+            'hero_image' => lh_theme_asset_uri('assets/media/service-feature-01.jpg'),
+            'card_title' => '愛知県の老人ホーム費用｜月額10万・15万・20万円で何が違うか',
+            'card_body' => '愛知県の老人ホーム費用の内訳と、月額10万・15万・20万円で選べる施設の違いを解説。自己負担と軽減制度もまとめました。',
+            'lead' => '老人ホームの月額は「介護保険の自己負担＋居住費＋食費＋その他」で決まり、予算帯ごとに選べる施設種別が変わります。',
+            'cta_title' => '「月◯万円まで」が決まっていれば、そこから逆算してご提案できます',
+            'cta_body' => '年金・ご予算の範囲で現実的な候補を一緒に探します（相談無料）。',
+        ),
+        'knowledge-cost-pension' => array(
+            'slug' => 'knowledge-cost-pension',
+            'url' => home_url('/knowledge-cost-pension/'),
+            'en_label' => 'Knowledge',
+            'title' => '年金だけで老人ホームに入れますか？｜愛知で「年金内」に近づける考え方',
+            'hero_image' => lh_theme_asset_uri('assets/media/service-feature-02.jpg'),
+            'card_title' => '年金だけで老人ホームに入れますか？｜愛知で「年金内」に近づける考え方',
+            'card_body' => '年金だけで老人ホームに入れるかを愛知県の年金平均額をもとに解説。特養＋軽減制度で「年金内」に近づける考え方を紹介します。',
+            'lead' => '年金だけで入れるかは年金額と施設種別の組み合わせ次第です。特養と軽減制度を使うと年金内に近づくケースがあります。',
+            'cta_title' => '年金振込通知書が手元にあれば、現実的な候補のご提案までは早いです',
+            'cta_body' => '年金・ご予算の範囲で現実的な候補を一緒に探します（相談無料）。',
+        ),
+        'knowledge-cost-hikazei' => array(
+            'slug' => 'knowledge-cost-hikazei',
+            'url' => home_url('/knowledge-cost-hikazei/'),
+            'en_label' => 'Knowledge',
+            'title' => '住民税非課税世帯の介護施設費用｜負担限度額認定（補足給付）と高額介護サービス費',
+            'hero_image' => lh_theme_asset_uri('assets/media/service-feature-03.jpg'),
+            'card_title' => '住民税非課税世帯の介護施設費用｜負担限度額認定（補足給付）と高額介護サービス費',
+            'card_body' => '住民税非課税世帯が使える費用軽減制度を解説。負担限度額認定（補足給付）と高額介護サービス費の仕組みと申請先をまとめました。',
+            'lead' => '住民税非課税世帯は、負担限度額認定で特養等の食費・居住費が軽減され、高額介護サービス費で自己負担にも上限が付きます。',
+            'cta_title' => '課税状況と年金額が分かれば、使える制度の当たりを付けてから施設探しに入れます',
+            'cta_body' => '年金・ご予算の範囲で現実的な候補を一緒に探します（相談無料）。',
+        ),
+        'knowledge-cost-iryouhikoujo' => array(
+            'slug' => 'knowledge-cost-iryouhikoujo',
+            'url' => home_url('/knowledge-cost-iryouhikoujo/'),
+            'en_label' => 'Knowledge',
+            'title' => '老人ホームの費用は医療費控除になりますか？｜対象になる費用・ならない費用',
+            'hero_image' => lh_theme_asset_uri('assets/media/service-aside.jpg'),
+            'card_title' => '老人ホームの費用は医療費控除になりますか？｜対象になる費用・ならない費用',
+            'card_body' => '老人ホームの費用が医療費控除の対象になるかを施設種別ごとに解説。特養は2分の1、老健は全額など国税庁の取り扱いをまとめました。',
+            'lead' => '医療費控除の扱いは施設種別で異なり、特養は自己負担の2分の1、老健・介護医療院は全額が対象になり得ます。',
+            'cta_title' => '控除を踏まえた「実質負担」で施設を比べたい方は、状況をお聞かせください',
+            'cta_body' => '年金・ご予算の範囲で現実的な候補を一緒に探します（相談無料）。',
+        ),
+        'knowledge-tokuyo-application' => array(
+            'slug' => 'knowledge-tokuyo-application',
+            'url' => home_url('/knowledge-tokuyo-application/'),
+            'en_label' => 'Knowledge',
+            'title' => '特養の申込みから入居まで｜愛知県での流れと準備',
+            'hero_image' => lh_theme_asset_uri('assets/media/facility-type-01-v2.jpg'),
+            'card_title' => '特養の申込みから入居まで｜愛知県での流れと準備',
+            'card_body' => '特養の申込みから入居までの流れを愛知県向けに解説。要介護3以上の原則、要介護1・2の特例入所、複数申込みの実務まで。',
+            'lead' => '特養は原則要介護3以上が対象で、施設ごとに申し込み、必要性の高い方から入居が決まる仕組みです。複数申込みもできます。',
+            'cta_title' => '特養を考え始めた段階でも、申込みの段取りからご一緒できます',
+            'cta_body' => '特養待機中の過ごし方・代替の組み立てを一緒に考えます（相談無料）。',
+        ),
+        'knowledge-tokuyo-waiting' => array(
+            'slug' => 'knowledge-tokuyo-waiting',
+            'url' => home_url('/knowledge-tokuyo-waiting/'),
+            'en_label' => 'Knowledge',
+            'title' => '特養の待機期間はどれくらい？｜待機中に検討する現実的な代替先',
+            'hero_image' => lh_theme_asset_uri('assets/media/facility-type-03-v2.jpg'),
+            'card_title' => '特養の待機期間はどれくらい？｜待機中に検討する現実的な代替先',
+            'card_body' => '特養の待機者数の最新データ（愛知県3,502人）と待機期間の考え方を解説。待機中に検討すべき代替先も紹介。',
+            'lead' => '愛知県の特養待機者は3,502人で減少傾向ですが、期間は施設差が大きく、待機中の代替先を持つことが現実的な備えです。',
+            'cta_title' => '「待つ間どうするか」から一緒に設計します',
+            'cta_body' => '特養待機中の過ごし方・代替の組み立てを一緒に考えます（相談無料）。',
+        ),
+        'knowledge-tokuyo-discharge-risk' => array(
+            'slug' => 'knowledge-tokuyo-discharge-risk',
+            'url' => home_url('/knowledge-tokuyo-discharge-risk/'),
+            'en_label' => 'Knowledge',
+            'title' => '退院期限があるのに特養だけを待つリスク',
+            'hero_image' => lh_theme_asset_uri('assets/media/facility-type-04.jpg'),
+            'card_title' => '退院期限があるのに特養だけを待つリスク',
+            'card_body' => '退院期限があるのに特養の入居だけを待つことのリスクと、老健・有料老人ホームなどでつなぐ二段構えの考え方を解説します。',
+            'lead' => '特養の入居時期は事前に読めないため、退院期限がある場合は受け皿を先に確保し、特養は並行で申し込むのが安全です。',
+            'cta_title' => '退院期限と特養希望、両方あきらめない段取りを作ります',
+            'cta_body' => '特養待機中の過ごし方・代替の組み立てを一緒に考えます（相談無料）。',
+        ),
+        'knowledge-dementia-refusal' => array(
+            'slug' => 'knowledge-dementia-refusal',
+            'url' => home_url('/knowledge-dementia-refusal/'),
+            'en_label' => 'Knowledge',
+            'title' => '認知症の親が施設を嫌がるとき、どう進めればいいですか？',
+            'hero_image' => lh_theme_asset_uri('assets/media/concept-visual-01.jpg'),
+            'card_title' => '認知症の親が施設を嫌がるとき、どう進めればいいですか？',
+            'card_body' => '認知症の親が施設入居を嫌がるときの進め方を解説。段階を踏む方法と、家族だけで抱え込まないための相談先を紹介します。',
+            'lead' => '説得より段階です。見学や体験利用など小さなステップを踏み、本人の不安の中身に合わせて進めると動きやすくなります。',
+            'cta_title' => '「嫌がっていて話が進まない」段階のご相談こそ歓迎です',
+            'cta_body' => '嫌がる・迷う・罪悪感——気持ちの整理から一緒に始めます（相談無料）。',
+        ),
+        'knowledge-dementia-timing' => array(
+            'slug' => 'knowledge-dementia-timing',
+            'url' => home_url('/knowledge-dementia-timing/'),
+            'en_label' => 'Knowledge',
+            'title' => '認知症の親を施設に入れるタイミングはいつですか？｜在宅介護の限界サイン',
+            'hero_image' => lh_theme_asset_uri('assets/media/concept-visual-02.jpg'),
+            'card_title' => '認知症の親を施設に入れるタイミングはいつですか？｜在宅介護の限界サイン',
+            'card_body' => '認知症の親を施設に入れるタイミングの考え方を解説。在宅介護の限界サイン、特例入所の制度、早めに動く理由をまとめました。',
+            'lead' => '「限界が来てから」では遅く、安全・健康・介護者の生活のいずれかにサインが出た時点が検討開始のタイミングです。',
+            'cta_title' => '「まだ早いかも」と思った今が、調べ始めるのにちょうどいいタイミングです',
+            'cta_body' => '嫌がる・迷う・罪悪感——気持ちの整理から一緒に始めます（相談無料）。',
+        ),
+        'knowledge-dementia-guilt' => array(
+            'slug' => 'knowledge-dementia-guilt',
+            'url' => home_url('/knowledge-dementia-guilt/'),
+            'en_label' => 'Knowledge',
+            'title' => '親を施設に入れるのは親不孝ですか？｜罪悪感との向き合い方',
+            'hero_image' => lh_theme_asset_uri('assets/media/concept-visual-03.jpg'),
+            'card_title' => '親を施設に入れるのは親不孝ですか？｜罪悪感との向き合い方',
+            'card_body' => '「親を施設に入れるのは親不孝では」という罪悪感との向き合い方を解説。施設入居は介護の放棄ではなく、関わり方を変える選択です。',
+            'lead' => '施設入居は介護をやめることではなく、介護の役割を専門職と分担し、家族にしかできない関わりに戻る選択です。',
+            'cta_title' => '気持ちの整理からご一緒します',
+            'cta_body' => '「決めきれない」段階のご相談で大丈夫です。',
+        ),
     );
 }
 
@@ -345,8 +489,8 @@ function lh_theme_defaults() {
                 ),
             ),
             'ctas' => array(
-                array('label' => '電話で入居相談する', 'url' => 'tel:052-000-0000', 'style' => 'primary'),
-                array('label' => 'LINEで入居相談する', 'url' => '#contact', 'style' => 'line'),
+                array('label' => '無料相談フォームへ', 'url' => '#contact', 'style' => 'primary'),
+                array('label' => '手数料と紹介範囲を見る', 'url' => '/fees-disclosure/', 'style' => 'ghost'),
             ),
         ),
         'trust' => array(
@@ -543,9 +687,9 @@ function lh_theme_defaults() {
                 array('label' => '会社名', 'value' => 'リアンハート'),
                 array('label' => '代表者', 'value' => '西田 江里'),
                 array('label' => '所在地', 'value' => '〒450-0002 愛知県名古屋市中村区名駅4丁目24番5号 第2森ビル401'),
-                array('label' => '電話番号', 'value' => '052-000-0000'),
-                array('label' => 'FAX', 'value' => '052-000-0001'),
-                array('label' => 'メール', 'value' => 'info@example.co.jp'),
+                array('label' => '電話番号', 'value' => ''),
+                array('label' => 'FAX', 'value' => ''),
+                array('label' => 'メール', 'value' => ''),
                 array('label' => '営業時間', 'value' => '9:00-18:00'),
                 array('label' => '定休日', 'value' => '土日祝'),
                 array('label' => '事業内容', 'value' => '介護施設紹介 / 老人ホーム紹介 / 入居相談'),
@@ -934,11 +1078,25 @@ function lh_get_company_row($label) {
 }
 
 function lh_is_placeholder_value($value) {
-    return $value === '' || preg_match('/example|0000|○○|sample/i', $value);
+    if (is_array($value)) {
+        $value = implode(' ', $value);
+    }
+
+    $text = trim((string) $value);
+    if ($text === '') {
+        return true;
+    }
+
+    return (bool) preg_match('/example|0000|○○|sample|サンプル|ダミー|052-000-000[01]/iu', $text);
 }
 
 function lh_get_meta_description() {
     if (is_singular()) {
+        $article_meta_description = get_post_meta(get_the_ID(), 'lh_article_meta_description', true);
+        if (is_string($article_meta_description) && trim($article_meta_description) !== '') {
+            return lh_plain_text($article_meta_description, 155);
+        }
+
         $excerpt = get_the_excerpt();
         if ($excerpt !== '') {
             return lh_plain_text($excerpt, 155);
@@ -974,6 +1132,19 @@ function lh_get_primary_image_url() {
         $image = get_the_post_thumbnail_url(get_the_ID(), 'full');
         if (is_string($image) && $image !== '') {
             return $image;
+        }
+    }
+
+    if (is_singular()) {
+        $article_hero = function_exists('get_field') ? get_field('lh_article_hero_image') : null;
+        if (is_array($article_hero) && !empty($article_hero['url'])) {
+            return (string) $article_hero['url'];
+        }
+
+        $slug = (string) get_post_field('post_name', get_the_ID());
+        $definition = lh_knowledge_article_definitions()[$slug] ?? array();
+        if (!empty($definition['hero_image'])) {
+            return (string) $definition['hero_image'];
         }
     }
 
@@ -1120,31 +1291,62 @@ function lh_output_structured_data() {
         ),
     );
 
-    if (is_front_page() && !empty($theme['qa']['items'])) {
-        $faq_items = array();
-        foreach (array_slice((array) $theme['qa']['items'], 0, 8) as $item) {
-            $question = lh_plain_text($item['question'] ?? '');
-            $answer = lh_plain_text($item['answer'] ?? '');
-            if ($question === '' || $answer === '') {
-                continue;
-            }
-            $faq_items[] = array(
-                '@type' => 'Question',
-                'name' => $question,
-                'acceptedAnswer' => array(
-                    '@type' => 'Answer',
-                    'text' => $answer,
-                ),
+    if (is_singular()) {
+        $breadcrumb_items = array(
+            array(
+                '@type' => 'ListItem',
+                'position' => 1,
+                'name' => 'ホーム',
+                'item' => $home_url,
+            ),
+        );
+
+        if (is_page_template('page-templates/template-knowledge-article.php')) {
+            $breadcrumb_items[] = array(
+                '@type' => 'ListItem',
+                'position' => 2,
+                'name' => '入居前に知っておきたいこと',
+                'item' => home_url('/#knowledge'),
             );
         }
 
-        if (!empty($faq_items)) {
-            $graph[] = array(
-                '@type' => 'FAQPage',
-                '@id' => $canonical . '#faq',
-                'mainEntity' => $faq_items,
-            );
+        $breadcrumb_items[] = array(
+            '@type' => 'ListItem',
+            'position' => count($breadcrumb_items) + 1,
+            'name' => lh_plain_text(get_the_title()),
+            'item' => $canonical,
+        );
+
+        $graph[] = array(
+            '@type' => 'BreadcrumbList',
+            '@id' => $canonical . '#breadcrumb',
+            'itemListElement' => $breadcrumb_items,
+        );
+    }
+
+    if (is_singular() && is_page_template('page-templates/template-knowledge-article.php')) {
+        $article = array(
+            '@type' => 'Article',
+            '@id' => $canonical . '#article',
+            'headline' => lh_plain_text(get_the_title(), 110),
+            'description' => $description,
+            'inLanguage' => 'ja',
+            'mainEntityOfPage' => array('@id' => $canonical . '#webpage'),
+            'author' => array(
+                '@type' => 'Organization',
+                'name' => 'リアンハート編集部',
+                'url' => home_url('/about-editorial-policy/'),
+            ),
+            'publisher' => array('@id' => $home_url . '#organization'),
+            'datePublished' => get_the_date('c'),
+            'dateModified' => get_the_modified_date('c'),
+        );
+
+        if ($image !== '') {
+            $article['image'] = $image;
         }
+
+        $graph[] = $article;
     }
 
     $schema = array(
@@ -1208,6 +1410,7 @@ function lh_enqueue_assets() {
                 'required' => '必須項目を入力してください。',
                 'confirm'  => '確認する',
                 'back'     => '入力に戻る',
+                'consent'  => '同意が必要な項目にチェックを入れてください。',
             ),
         )
     );
@@ -1281,6 +1484,8 @@ add_action('acf/init', 'lh_register_options_page');
 // 1. WordPress バージョン情報の露出を抑止（generator meta / RSS generator）
 remove_action('wp_head', 'wp_generator');
 add_filter('the_generator', '__return_empty_string');
+remove_action('wp_head', 'rsd_link');
+remove_action('wp_head', 'wlwmanifest_link');
 
 // 2-a. REST API の users エンドポイントを公開しない（メール/ログイン名の列挙防止）
 function lh_restrict_rest_users($endpoints) {
@@ -1347,3 +1552,43 @@ add_filter('login_errors', function () {
     return 'ログイン情報が正しくありません。';
 });
 
+/* llms.txt — AI/LLM向けサイト要約 (2026). /llms.txt配信, home_url自動追従 */
+function lh_render_llms_txt() {
+    $home = untrailingslashit(home_url('/'));
+    $theme = lh_theme_data();
+    $brand = $theme['brand'] ?? array();
+    $name = lh_plain_text($brand['site_name'] ?? 'リアンハート');
+    $articles = lh_knowledge_article_definitions();
+    $lines = array();
+    $lines[] = '# ' . $name;
+    $lines[] = '';
+    $lines[] = '> 愛知県全域に対応する老人ホーム紹介・入居相談サービス。介護付有料老人ホーム・住宅型有料老人ホーム・サービス付き高齢者向け住宅・グループホームから、ご本人の状態とご家族の希望に合わせて候補を整理し、比較・見学調整まで無料で伴走します。';
+    $lines[] = '';
+    $lines[] = '費用や立地だけでなく、医療的な配慮・生活リズム・ご家族の通いやすさまで整理し、入居後のミスマッチを減らす入居相談を提供。遠方のご家族からのご相談にも対応しています。';
+    $lines[] = '';
+    $lines[] = '## 主要ページ';
+    $lines[] = '- [トップページ](' . $home . '/): サービス概要・相談からご紹介までの流れ・よくあるご質問';
+    $lines[] = '- [医療・介護関係者の方へ](' . lh_get_referrer_page_url() . '): ご紹介前の方針と相談からご紹介までの流れ';
+    $lines[] = '';
+    $lines[] = '## 知識記事';
+    foreach ($articles as $a) {
+        if (!is_array($a)) { continue; }
+        $lines[] = '- [' . $a['title'] . '](' . $a['url'] . '): ' . $a['card_body'];
+    }
+    $lines[] = '';
+    $lines[] = '## サービス内容';
+    $lines[] = '- 対応地域: 愛知県全域（名古屋市・尾張・知多・西三河・東三河）';
+    $lines[] = '- 紹介施設: 介護付有料老人ホーム / 住宅型有料老人ホーム / サービス付き高齢者向け住宅 / グループホーム';
+    $lines[] = '- 料金: 相談・施設紹介・見学調整はすべて無料';
+    $lines[] = '';
+    return implode("\n", $lines) . "\n";
+}
+add_action('template_redirect', function () {
+    $uri = strtok((string) ($_SERVER['REQUEST_URI'] ?? ''), '?');
+    if (rtrim($uri, '/') !== '/llms.txt') { return; }
+    nocache_headers();
+    header('Content-Type: text/plain; charset=utf-8');
+    status_header(200);
+    echo lh_render_llms_txt();
+    exit;
+}, 0);

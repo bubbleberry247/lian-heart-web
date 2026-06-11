@@ -8,6 +8,7 @@ $lh_required_files = array(
     'acf-fields'       => get_template_directory() . '/inc/acf-fields.php',
     'rest-contact'     => get_template_directory() . '/inc/rest-contact.php',
     'fallback-options' => get_template_directory() . '/inc/fallback-options.php',
+    'content-seeds'    => get_template_directory() . '/inc/content-seeds.php',
 );
 
 $lh_missing_files = array();

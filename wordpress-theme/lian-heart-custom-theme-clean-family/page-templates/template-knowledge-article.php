@@ -28,8 +28,33 @@ $cta_body = lh_fill_empty($cta_body, $current_definition['cta_body'] ?? 'ご本�
 $hero = lh_resolve_image(lh_fill_empty($hero_image, $current_definition['hero_image'] ?? null), get_the_title(), 1600, 900);
 $contact_actions = array(
     array('label' => '相談してみる', 'url' => home_url('/#contact'), 'style' => 'primary'),
-    array('label' => '電話で相談する', 'url' => 'tel:052-000-0000', 'style' => 'line'),
 );
+$contact_phone = lh_get_company_row('電話番号');
+if (!lh_is_placeholder_value($contact_phone)) {
+    $contact_actions[] = array('label' => '電話で相談する', 'url' => 'tel:' . preg_replace('/[^\d+]/', '', $contact_phone), 'style' => 'line');
+}
+
+$editorial_page = get_page_by_path('about-editorial-policy');
+$editorial_url = ($editorial_page instanceof WP_Post && $editorial_page->post_status === 'publish')
+    ? get_permalink($editorial_page)
+    : '';
+$published_date = get_the_date('Y.m.d');
+$modified_date = get_the_modified_date('Y.m.d');
+
+$sources_raw = (string) get_post_meta(get_the_ID(), 'lh_article_sources', true);
+$source_items = array();
+foreach (preg_split('/\r\n|\r|\n/', $sources_raw) as $source_line) {
+    $source_line = trim($source_line);
+    if ($source_line === '') {
+        continue;
+    }
+
+    $source_parts = explode('｜', $source_line, 2);
+    $source_items[] = array(
+        'label' => trim($source_parts[0]),
+        'url'   => isset($source_parts[1]) ? trim($source_parts[1]) : '',
+    );
+}
 
 $related_articles = array();
 foreach ($definitions as $slug => $definition) {
@@ -38,11 +63,19 @@ foreach ($definitions as $slug => $definition) {
     }
 
     $related_page = get_page_by_path($slug);
+    if (!($related_page instanceof WP_Post) || $related_page->post_status !== 'publish') {
+        continue;
+    }
+
     $related_articles[] = array(
-        'title' => $related_page ? get_the_title($related_page) : ($definition['title'] ?? ''),
-        'url' => $related_page ? get_permalink($related_page) : ($definition['url'] ?? home_url('/#knowledge')),
+        'title' => get_the_title($related_page),
+        'url' => get_permalink($related_page),
         'body' => $definition['card_body'] ?? '',
     );
+
+    if (count($related_articles) >= 3) {
+        break;
+    }
 }
 ?>
 <main class="site-main knowledge-article-page">
@@ -65,6 +98,16 @@ foreach ($definitions as $slug => $definition) {
                 <p class="knowledge-article-hero__lead js-knowledge-article-fx"><?php echo esc_html($lead); ?></p>
             <?php endif; ?>
 
+            <p class="knowledge-article-meta">
+                <span>編集: <?php if ($editorial_url !== '') : ?><a href="<?php echo esc_url($editorial_url); ?>">リアンハート編集部</a><?php else : ?>リアンハート編集部<?php endif; ?></span>
+                <span aria-hidden="true">｜</span>
+                <span>公開日 <?php echo esc_html($published_date); ?></span>
+                <?php if ($modified_date !== $published_date) : ?>
+                    <span aria-hidden="true">｜</span>
+                    <span>最終更新 <?php echo esc_html($modified_date); ?></span>
+                <?php endif; ?>
+            </p>
+
             <figure class="knowledge-article-hero__visual js-knowledge-article-fx">
                 <span class="image-wipe" aria-hidden="true"></span>
                 <img src="<?php echo esc_url($hero['url']); ?>" alt="<?php echo esc_attr($hero['alt']); ?>">
@@ -78,6 +121,23 @@ foreach ($definitions as $slug => $definition) {
                 <?php the_content(); ?>
             </article>
 
+            <?php if (!empty($source_items)) : ?>
+                <section class="knowledge-article-sources">
+                    <h2>出典</h2>
+                    <ul>
+                        <?php foreach ($source_items as $source_item) : ?>
+                            <li>
+                                <?php if ($source_item['url'] !== '') : ?>
+                                    <a href="<?php echo esc_url($source_item['url']); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html($source_item['label']); ?></a>
+                                <?php else : ?>
+                                    <?php echo esc_html($source_item['label']); ?>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </section>
+            <?php endif; ?>
+
             <aside class="knowledge-article-cta js-knowledge-article-cta-fx">
                 <div class="knowledge-article-cta__body">
                     <h2><?php echo esc_html($cta_title); ?></h2>
@@ -88,6 +148,7 @@ foreach ($definitions as $slug => $definition) {
                         <?php echo lh_render_button($action, 'knowledge-article-cta__action'); ?>
                     <?php endforeach; ?>
                 </div>
+                <p class="knowledge-article-cta__disclosure">※ご相談者さまから料金はいただきません。ご入居が決まった場合に施設から紹介手数料を受け取る場合があります（<a href="<?php echo esc_url(home_url('/fees-disclosure/')); ?>">手数料の開示</a>）。当社がすべての施設を紹介できるわけではありません（<a href="<?php echo esc_url(home_url('/fees-disclosure/')); ?>">紹介範囲について</a>）。ご相談内容は施設への打診に必要な範囲で利用します（<a href="<?php echo esc_url(home_url('/privacy-policy/')); ?>">個人情報の取り扱い</a>）。</p>
             </aside>
 
             <?php if (!empty($related_articles)) : ?>

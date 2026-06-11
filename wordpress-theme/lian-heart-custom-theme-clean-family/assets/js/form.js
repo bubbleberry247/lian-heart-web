@@ -40,18 +40,24 @@
             formData.forEach(function (value, key) {
                 payload[key] = value;
             });
-            payload.privacy = formData.get('privacy') ? 1 : 0;
+            payload.consent_privacy = formData.get('consent_privacy') ? '1' : '0';
+            payload.consent_third_party = formData.get('consent_third_party') ? '1' : '0';
+            payload.privacy = formData.get('consent_privacy') ? 1 : 0;
             payload.source_url = window.location.href;
             return payload;
         }
 
         function validate(payload) {
-            if (!payload.name || !payload.email || !payload.phone || !payload.message || !payload.privacy) {
+            if (!payload.name || !payload.email || !payload.phone || !payload.message) {
                 return (lhContact.messages && lhContact.messages.required) || (lhContact.messages && lhContact.messages.error) || '必須項目を入力してください。';
             }
 
             if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(payload.email)) {
                 return (lhContact.messages && lhContact.messages.required) || (lhContact.messages && lhContact.messages.error) || '必須項目を入力してください。';
+            }
+
+            if (payload.consent_privacy !== '1' || payload.consent_third_party !== '1') {
+                return (lhContact.messages && lhContact.messages.consent) || '同意が必要な項目にチェックを入れてください。';
             }
 
             return '';

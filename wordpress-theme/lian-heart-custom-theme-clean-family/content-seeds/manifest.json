@@ -1,0 +1,243 @@
+{
+  "knowledge-after-discharge": {
+    "type": "knowledge",
+    "title": "退院まで時間がない方へ｜愛知で退院日から逆算して進める施設探しの手順",
+    "meta_description": "退院まで時間がない方へ。愛知県で退院日から逆算して施設探しを進める手順を、相談先・要介護認定・施設の選択肢の順に解説します。",
+    "en_label": "Knowledge",
+    "lead": "退院期限が迫っていても、本人の状態・医療の必要度・予算の3点を整理すれば、退院日から逆算して候補施設を絞り込めます。",
+    "card_body": "愛知県で退院日から逆算して施設探しを進める手順を、相談先・要介護認定・施設の選択肢の順に解説します。",
+    "cta_title": "退院期限から逆算して、今日からの動き方を一緒に整理します",
+    "cta_body": "退院期限が決まっている方へ。",
+    "sources": [
+      "厚生労働省 介護サービス情報公表システム「サービス利用までの流れ」｜https://www.kaigokensaku.mhlw.go.jp/commentary/flow.html",
+      "厚生労働省 老高発1212001号「指定介護老人福祉施設等の入所に関する指針について」（平成26年12月12日）｜https://www.mhlw.go.jp/web/t_doc?dataId=00tc0609&dataType=1&pageNo=1",
+      "WAM NET（福祉医療機構）「介護老人保健施設」｜https://www.wam.go.jp/content/wamnet/pcpub/kaigo/handbook/service/c078-p02-02-Kaigo-19.html",
+      "WAM NET（福祉医療機構）「介護老人福祉施設（特別養護老人ホーム）」｜https://www.wam.go.jp/content/wamnet/pcpub/kaigo/handbook/service/c078-p02-02-Kaigo-17.html",
+      "公益社団法人日本医療ソーシャルワーカー協会「医療ソーシャルワーカーの業務内容」｜https://www.jaswhs.or.jp/about/sw_gyoumu.php"
+    ],
+    "note": "既存ページの全面改稿。シーダーは既存ページを上書きしないため、公開時にWP管理画面で本HTMLを手動で貼り替える"
+  },
+  "knowledge-discharge-flow": {
+    "type": "knowledge",
+    "title": "病院から施設へ移るには｜退院調整の流れと相談先（地域連携室・MSW・ケアマネ）",
+    "meta_description": "病院から施設へ移るまでの流れを解説。医療ソーシャルワーカー（MSW）・地域連携室・ケアマネジャーの役割と、家族が準備すべきことを整理します。",
+    "en_label": "Knowledge",
+    "lead": "病院から施設への移行は、病院の医療ソーシャルワーカーと家族・ケアマネジャーが連携して進めるのが基本の流れです。",
+    "card_body": "病院から施設へ移るまでの流れを解説。MSW・地域連携室・ケアマネジャーの役割と、家族が準備すべきことを整理します。",
+    "cta_title": "入院中の今から動けば、選択肢は広がります",
+    "cta_body": "退院予定日をお聞かせください。",
+    "sources": [
+      "厚生労働省 介護サービス情報公表システム「サービス利用までの流れ」｜https://www.kaigokensaku.mhlw.go.jp/commentary/flow.html",
+      "厚生労働省 老高発1212001号「指定介護老人福祉施設等の入所に関する指針について」（平成26年12月12日）｜https://www.mhlw.go.jp/web/t_doc?dataId=00tc0609&dataType=1&pageNo=1",
+      "WAM NET（福祉医療機構）「介護老人保健施設」｜https://www.wam.go.jp/content/wamnet/pcpub/kaigo/handbook/service/c078-p02-02-Kaigo-19.html",
+      "WAM NET（福祉医療機構）「介護老人福祉施設（特別養護老人ホーム）」｜https://www.wam.go.jp/content/wamnet/pcpub/kaigo/handbook/service/c078-p02-02-Kaigo-17.html",
+      "公益社団法人日本医療ソーシャルワーカー協会「医療ソーシャルワーカーの業務内容」｜https://www.jaswhs.or.jp/about/sw_gyoumu.php"
+    ]
+  },
+  "knowledge-discharge-options": {
+    "type": "knowledge",
+    "title": "退院後すぐに入れる可能性がある施設はどれ？｜老健・有料老人ホーム・サ高住のつなぎ方",
+    "meta_description": "退院後の受け皿になりやすい老健・有料老人ホーム・サ高住の役割と「つなぎ方」を解説。特養待機中の現実的な組み立て方も紹介します。",
+    "en_label": "Knowledge",
+    "lead": "退院直後の受け皿は老健・有料老人ホーム・サ高住が中心で、特養は待機を見込んで「つなぎ」と並行して申し込むのが現実的です。",
+    "card_body": "退院後の受け皿になりやすい老健・有料老人ホーム・サ高住の役割と「つなぎ方」を解説。特養待機中の組み立て方も紹介します。",
+    "cta_title": "「どの種別から当たるべきか」だけでも、状態とご予算を伺えば整理できます",
+    "cta_body": "退院期限から逆算して、今日からの動き方を一緒に整理しませんか（相談無料）。",
+    "sources": [
+      "国税庁 タックスアンサー No.1125「医療費控除の対象となる介護保険制度下での施設サービスの対価」｜https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1125.htm",
+      "国税庁 タックスアンサー No.1127「医療費控除の対象となる介護保険制度下での居宅サービス等の対価」｜https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1127.htm",
+      "厚生労働省 老高発1212001号「指定介護老人福祉施設等の入所に関する指針について」（平成26年12月12日）｜https://www.mhlw.go.jp/web/t_doc?dataId=00tc0609&dataType=1&pageNo=1",
+      "愛知県「特別養護老人ホームへの入所申込者（待機者）の調査結果」（2023年7月25日公表）｜https://www.pref.aichi.jp/press-release/taikisyachousa05.html",
+      "WAM NET（福祉医療機構）「介護老人保健施設」｜https://www.wam.go.jp/content/wamnet/pcpub/kaigo/handbook/service/c078-p02-02-Kaigo-19.html",
+      "WAM NET（福祉医療機構）「介護老人福祉施設（特別養護老人ホーム）」｜https://www.wam.go.jp/content/wamnet/pcpub/kaigo/handbook/service/c078-p02-02-Kaigo-17.html"
+    ]
+  },
+  "knowledge-cost-aichi": {
+    "type": "knowledge",
+    "title": "愛知県の老人ホーム費用｜月額10万・15万・20万円で何が違うか",
+    "meta_description": "愛知県の老人ホーム費用の内訳と、月額10万・15万・20万円で選べる施設の違いを解説。介護保険の自己負担と軽減制度もまとめました。",
+    "en_label": "Knowledge",
+    "lead": "老人ホームの月額は「介護保険の自己負担＋居住費＋食費＋その他」で決まり、予算帯ごとに選べる施設種別が変わります。",
+    "card_body": "愛知県の老人ホーム費用の内訳と、月額10万・15万・20万円で選べる施設の違いを解説。自己負担と軽減制度もまとめました。",
+    "cta_title": "「月◯万円まで」が決まっていれば、そこから逆算してご提案できます",
+    "cta_body": "年金・ご予算の範囲で現実的な候補を一緒に探します（相談無料）。",
+    "sources": [
+      "国税庁 タックスアンサー No.1125「医療費控除の対象となる介護保険制度下での施設サービスの対価」｜https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1125.htm",
+      "厚生労働省 介護サービス情報公表システム「サービスにかかる利用料」｜https://www.kaigokensaku.mhlw.go.jp/commentary/fee.html"
+    ]
+  },
+  "knowledge-cost-pension": {
+    "type": "knowledge",
+    "title": "年金だけで老人ホームに入れますか？｜愛知で「年金内」に近づける考え方",
+    "meta_description": "年金だけで老人ホームに入れるかを愛知県の年金平均額をもとに解説。特養＋軽減制度で「年金内」に近づける考え方を紹介します。",
+    "en_label": "Knowledge",
+    "lead": "年金だけで入れるかは年金額と施設種別の組み合わせ次第です。特養と軽減制度を使うと年金内に近づくケースがあります。",
+    "card_body": "年金だけで老人ホームに入れるかを愛知県の年金平均額をもとに解説。特養＋軽減制度で「年金内」に近づける考え方を紹介します。",
+    "cta_title": "年金振込通知書が手元にあれば、現実的な候補のご提案までは早いです",
+    "cta_body": "年金・ご予算の範囲で現実的な候補を一緒に探します（相談無料）。",
+    "sources": [
+      "厚生労働省 介護サービス情報公表システム「サービスにかかる利用料」｜https://www.kaigokensaku.mhlw.go.jp/commentary/fee.html",
+      "厚生労働省 老高発1212001号「指定介護老人福祉施設等の入所に関する指針について」（平成26年12月12日）｜https://www.mhlw.go.jp/web/t_doc?dataId=00tc0609&dataType=1&pageNo=1",
+      "厚生労働省「令和5年度 厚生年金保険・国民年金事業の概況」｜https://www.mhlw.go.jp/content/001359541.pdf"
+    ]
+  },
+  "knowledge-cost-hikazei": {
+    "type": "knowledge",
+    "title": "住民税非課税世帯の介護施設費用｜負担限度額認定（補足給付）と高額介護サービス費",
+    "meta_description": "住民税非課税世帯が使える介護施設の費用軽減制度を解説。負担限度額認定（補足給付）と高額介護サービス費の仕組みと申請先をまとめました。",
+    "en_label": "Knowledge",
+    "lead": "住民税非課税世帯は、負担限度額認定で特養等の食費・居住費が軽減され、高額介護サービス費で自己負担にも上限が付きます。",
+    "card_body": "住民税非課税世帯が使える費用軽減制度を解説。負担限度額認定（補足給付）と高額介護サービス費の仕組みと申請先をまとめました。",
+    "cta_title": "課税状況と年金額が分かれば、使える制度の当たりを付けてから施設探しに入れます",
+    "cta_body": "年金・ご予算の範囲で現実的な候補を一緒に探します（相談無料）。",
+    "sources": [
+      "厚生労働省 介護サービス情報公表システム「サービスにかかる利用料」｜https://www.kaigokensaku.mhlw.go.jp/commentary/fee.html",
+      "厚生労働省 リーフレット「介護保険施設等における居住費の負担限度額」（補足給付）｜https://www.mhlw.go.jp/content/000778218.pdf"
+    ]
+  },
+  "knowledge-cost-iryouhikoujo": {
+    "type": "knowledge",
+    "title": "老人ホームの費用は医療費控除になりますか？｜対象になる費用・ならない費用",
+    "meta_description": "老人ホームの費用が医療費控除の対象になるかを施設種別ごとに解説。特養は2分の1、老健は全額など国税庁の取り扱いをまとめました。",
+    "en_label": "Knowledge",
+    "lead": "医療費控除の扱いは施設種別で異なり、特養は自己負担の2分の1、老健・介護医療院は全額が対象になり得ます。",
+    "card_body": "老人ホームの費用が医療費控除の対象になるかを施設種別ごとに解説。特養は2分の1、老健は全額など国税庁の取り扱いをまとめました。",
+    "cta_title": "控除を踏まえた「実質負担」で施設を比べたい方は、状況をお聞かせください",
+    "cta_body": "年金・ご予算の範囲で現実的な候補を一緒に探します（相談無料）。",
+    "sources": [
+      "国税庁 タックスアンサー No.1125「医療費控除の対象となる介護保険制度下での施設サービスの対価」｜https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1125.htm",
+      "国税庁 タックスアンサー No.1127「医療費控除の対象となる介護保険制度下での居宅サービス等の対価」｜https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1127.htm",
+      "国税庁 タックスアンサー No.1120「医療費控除の対象となる医療費」｜https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1120.htm",
+      "国税庁 タックスアンサー No.1122「医療費控除の対象となる医療費」（おむつ代）｜https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1122.htm"
+    ]
+  },
+  "knowledge-tokuyo-application": {
+    "type": "knowledge",
+    "title": "特養の申込みから入居まで｜愛知県での流れと準備",
+    "meta_description": "特別養護老人ホームの申込みから入居までの流れを愛知県向けに解説。要介護3以上の原則、要介護1・2の特例入所、複数申込みの実務まで。",
+    "en_label": "Knowledge",
+    "lead": "特養は原則要介護3以上が対象で、施設ごとに申し込み、必要性の高い方から入居が決まる仕組みです。複数申込みもできます。",
+    "card_body": "特養の申込みから入居までの流れを愛知県向けに解説。要介護3以上の原則、要介護1・2の特例入所、複数申込みの実務まで。",
+    "cta_title": "特養を考え始めた段階でも、申込みの段取りからご一緒できます",
+    "cta_body": "特養待機中の過ごし方・代替の組み立てを一緒に考えます（相談無料）。",
+    "sources": [
+      "厚生労働省 老高発1212001号「指定介護老人福祉施設等の入所に関する指針について」（平成26年12月12日）｜https://www.mhlw.go.jp/web/t_doc?dataId=00tc0609&dataType=1&pageNo=1",
+      "愛知県「特別養護老人ホームへの入所申込者（待機者）の調査結果」（2023年7月25日公表）｜https://www.pref.aichi.jp/press-release/taikisyachousa05.html",
+      "名古屋市 介護・障害情報提供システム「市内特別養護老人ホーム待機者数」｜https://www.kaigo-wel.city.nagoya.jp/view/kaigo/date/taiki.html",
+      "WAM NET（福祉医療機構）「介護老人福祉施設（特別養護老人ホーム）」｜https://www.wam.go.jp/content/wamnet/pcpub/kaigo/handbook/service/c078-p02-02-Kaigo-17.html",
+      "消費者庁「優良誤認とは」（景品表示法）｜https://www.caa.go.jp/policies/policy/representation/fair_labeling/representation_regulation/misleading_representation/"
+    ]
+  },
+  "knowledge-tokuyo-waiting": {
+    "type": "knowledge",
+    "title": "特養の待機期間はどれくらい？｜待機中に検討する現実的な代替先",
+    "meta_description": "特養の待機者数の最新データ（愛知県3,502人）と待機期間の考え方を解説。待機中に検討すべき老健・有料・サ高住などの代替先も紹介。",
+    "en_label": "Knowledge",
+    "lead": "愛知県の特養待機者は3,502人で減少傾向ですが、期間は施設差が大きく、待機中の代替先を持つことが現実的な備えです。",
+    "card_body": "特養の待機者数の最新データ（愛知県3,502人）と待機期間の考え方を解説。待機中に検討すべき代替先も紹介。",
+    "cta_title": "「待つ間どうするか」から一緒に設計します",
+    "cta_body": "特養待機中の過ごし方・代替の組み立てを一緒に考えます（相談無料）。",
+    "sources": [
+      "厚生労働省 老高発1212001号「指定介護老人福祉施設等の入所に関する指針について」（平成26年12月12日）｜https://www.mhlw.go.jp/web/t_doc?dataId=00tc0609&dataType=1&pageNo=1",
+      "愛知県「特別養護老人ホームへの入所申込者（待機者）の調査結果」（2023年7月25日公表）｜https://www.pref.aichi.jp/press-release/taikisyachousa05.html",
+      "名古屋市 介護・障害情報提供システム「市内特別養護老人ホーム待機者数」｜https://www.kaigo-wel.city.nagoya.jp/view/kaigo/date/taiki.html",
+      "WAM NET（福祉医療機構）「介護老人保健施設」｜https://www.wam.go.jp/content/wamnet/pcpub/kaigo/handbook/service/c078-p02-02-Kaigo-19.html"
+    ]
+  },
+  "knowledge-tokuyo-discharge-risk": {
+    "type": "knowledge",
+    "title": "退院期限があるのに特養だけを待つリスク",
+    "meta_description": "退院期限があるのに特養の入居だけを待つことのリスクと、老健・有料老人ホームなどでつなぐ二段構えの考え方を解説します。",
+    "en_label": "Knowledge",
+    "lead": "特養の入居時期は事前に読めないため、退院期限がある場合は受け皿を先に確保し、特養は並行で申し込むのが安全です。",
+    "card_body": "退院期限があるのに特養の入居だけを待つことのリスクと、老健・有料老人ホームなどでつなぐ二段構えの考え方を解説します。",
+    "cta_title": "退院期限と特養希望、両方あきらめない段取りを作ります",
+    "cta_body": "特養待機中の過ごし方・代替の組み立てを一緒に考えます（相談無料）。",
+    "sources": [
+      "国税庁 タックスアンサー No.1125「医療費控除の対象となる介護保険制度下での施設サービスの対価」｜https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1125.htm",
+      "厚生労働省 老高発1212001号「指定介護老人福祉施設等の入所に関する指針について」（平成26年12月12日）｜https://www.mhlw.go.jp/web/t_doc?dataId=00tc0609&dataType=1&pageNo=1",
+      "愛知県「特別養護老人ホームへの入所申込者（待機者）の調査結果」（2023年7月25日公表）｜https://www.pref.aichi.jp/press-release/taikisyachousa05.html",
+      "WAM NET（福祉医療機構）「介護老人保健施設」｜https://www.wam.go.jp/content/wamnet/pcpub/kaigo/handbook/service/c078-p02-02-Kaigo-19.html",
+      "公益社団法人日本医療ソーシャルワーカー協会「医療ソーシャルワーカーの業務内容」｜https://www.jaswhs.or.jp/about/sw_gyoumu.php"
+    ]
+  },
+  "knowledge-dementia-refusal": {
+    "type": "knowledge",
+    "title": "認知症の親が施設を嫌がるとき、どう進めればいいですか？",
+    "meta_description": "認知症の親が施設入居を嫌がるときの進め方を解説。無理強いせずに段階を踏む方法と、家族だけで抱え込まないための相談先を紹介します。",
+    "en_label": "Knowledge",
+    "lead": "説得より段階です。見学や体験利用など小さなステップを踏み、本人の不安の中身に合わせて進めると動きやすくなります。",
+    "card_body": "認知症の親が施設入居を嫌がるときの進め方を解説。段階を踏む方法と、家族だけで抱え込まないための相談先を紹介します。",
+    "cta_title": "「嫌がっていて話が進まない」段階のご相談こそ歓迎です",
+    "cta_body": "嫌がる・迷う・罪悪感——気持ちの整理から一緒に始めます（相談無料）。",
+    "sources": [
+      "厚生労働省「医療法における病院等の広告規制について」（医療広告等ガイドライン）｜https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iryou/kokokukisei/index.html",
+      "厚生労働省「認知症及び軽度認知障害（MCI）の高齢者数と有病率の将来推計」（令和5年度老人保健健康増進等事業・九州大学）｜https://www.mhlw.go.jp/content/001279920.pdf"
+    ]
+  },
+  "knowledge-dementia-timing": {
+    "type": "knowledge",
+    "title": "認知症の親を施設に入れるタイミングはいつですか？｜在宅介護の限界サイン",
+    "meta_description": "認知症の親を施設に入れるタイミングの考え方を解説。在宅介護の限界サイン、特例入所の制度、早めに動く理由をまとめました。",
+    "en_label": "Knowledge",
+    "lead": "「限界が来てから」では遅く、安全・健康・介護者の生活のいずれかにサインが出た時点が検討開始のタイミングです。",
+    "card_body": "認知症の親を施設に入れるタイミングの考え方を解説。在宅介護の限界サイン、特例入所の制度、早めに動く理由をまとめました。",
+    "cta_title": "「まだ早いかも」と思った今が、調べ始めるのにちょうどいいタイミングです",
+    "cta_body": "嫌がる・迷う・罪悪感——気持ちの整理から一緒に始めます（相談無料）。",
+    "sources": [
+      "厚生労働省 老高発1212001号「指定介護老人福祉施設等の入所に関する指針について」（平成26年12月12日）｜https://www.mhlw.go.jp/web/t_doc?dataId=00tc0609&dataType=1&pageNo=1",
+      "厚生労働省「認知症及び軽度認知障害（MCI）の高齢者数と有病率の将来推計」（令和5年度老人保健健康増進等事業・九州大学）｜https://www.mhlw.go.jp/content/001279920.pdf"
+    ]
+  },
+  "knowledge-dementia-guilt": {
+    "type": "knowledge",
+    "title": "親を施設に入れるのは親不孝ですか？｜罪悪感との向き合い方",
+    "meta_description": "「親を施設に入れるのは親不孝では」という罪悪感との向き合い方を解説。施設入居は介護の放棄ではなく、関わり方を変える選択です。",
+    "en_label": "Knowledge",
+    "lead": "施設入居は介護をやめることではなく、介護の役割を専門職と分担し、家族にしかできない関わりに戻る選択です。",
+    "card_body": "「親を施設に入れるのは親不孝では」という罪悪感との向き合い方を解説。施設入居は介護の放棄ではなく、関わり方を変える選択です。",
+    "cta_title": "気持ちの整理からご一緒します",
+    "cta_body": "「決めきれない」段階のご相談で大丈夫です。",
+    "sources": [
+      "厚生労働省「認知症及び軽度認知障害（MCI）の高齢者数と有病率の将来推計」（令和5年度老人保健健康増進等事業・九州大学）｜https://www.mhlw.go.jp/content/001279920.pdf",
+      "公益社団法人 認知症の人と家族の会｜https://www.alzheimer.or.jp/"
+    ]
+  },
+  "about-editorial-policy": {
+    "type": "page",
+    "status": "publish",
+    "title": "運営者情報・編集方針",
+    "lead": "全記事の編集クレジットのリンク先として、リアンハートの運営者情報と編集体制・編集方針を公表するページです。",
+    "sources": [
+      "高齢者住まい事業者団体連合会（高住連）「紹介事業者届出公表制度」｜https://koujuren.jp/todokede/"
+    ]
+  },
+  "fees-disclosure": {
+    "type": "page",
+    "status": "publish",
+    "title": "ご相談が無料の理由と手数料の開示",
+    "lead": "ご相談者から料金はいただきません。ご入居が決まった場合に、施設側から紹介手数料を受け取る事業モデルだからです。",
+    "sources": [
+      "高齢者住まい事業者団体連合会（高住連）「紹介事業者届出公表制度」｜https://koujuren.jp/todokede/",
+      "公益社団法人全国有料老人ホーム協会「有料老人ホーム設置運営標準指導指針の改正について」（2024年12月9日）｜https://www.yurokyo.or.jp/info/view/5622"
+    ]
+  },
+  "consultation-policy": {
+    "type": "page",
+    "status": "publish",
+    "title": "相談から入居までの流れと、事例・個人情報の取り扱い方針",
+    "lead": "相談は状況の整理から始まり、提案・見学・入居後まで伴走します。事例は同意を得て匿名化した場合のみ掲載します。",
+    "sources": [
+      "高齢者住まい事業者団体連合会（高住連）「紹介事業者届出公表制度」｜https://koujuren.jp/todokede/"
+    ]
+  },
+  "privacy-policy": {
+    "type": "page",
+    "status": "publish",
+    "title": "プライバシーポリシー",
+    "lead": "要配慮個人情報を扱う相談フォームの法的前提として、個人情報の取得・利用・第三者提供の方針を定めるページです。",
+    "sources": [
+      "高齢者住まい事業者団体連合会（高住連）「紹介事業者届出公表制度」｜https://koujuren.jp/todokede/"
+    ]
+  }
+}

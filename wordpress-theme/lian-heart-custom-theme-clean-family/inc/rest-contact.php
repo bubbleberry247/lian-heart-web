@@ -36,6 +36,8 @@ function lh_contact_mail_body(array $payload) {
         'メールアドレス: ' . $payload['email'],
         '電話番号: ' . $payload['phone'],
         'プライバシーポリシー同意: ' . ($payload['privacy'] === '1' ? '同意済み' : '未同意'),
+        '個人情報の取得・利用同意: ' . (($payload['consent_privacy'] ?? '') === '1' ? '同意済み' : '未同意'),
+        '第三者提供同意: ' . (($payload['consent_third_party'] ?? '') === '1' ? '同意済み' : '未同意'),
         '送信元URL: ' . $payload['source_url'],
         'ユーザーエージェント: ' . $payload['user_agent'],
         '',
@@ -89,14 +91,16 @@ function lh_handle_contact_submission(WP_REST_Request $request) {
     set_transient($rate_key, $attempts + 1, 60);
 
     $payload = array(
-        'name'          => sanitize_text_field($params['name'] ?? ''),
-        'email'         => sanitize_email($params['email'] ?? ''),
-        'phone'         => sanitize_text_field($params['phone'] ?? ''),
-        'message'       => sanitize_textarea_field($params['message'] ?? ''),
-        'privacy'       => !empty($params['privacy']) ? '1' : '0',
-        'source_url'    => esc_url_raw($params['source_url'] ?? home_url('/')),
-        'user_agent'    => sanitize_text_field($request->get_header('user_agent')),
-        'submitted_at'  => current_time('c'),
+        'name'                => sanitize_text_field($params['name'] ?? ''),
+        'email'               => sanitize_email($params['email'] ?? ''),
+        'phone'               => sanitize_text_field($params['phone'] ?? ''),
+        'message'             => sanitize_textarea_field($params['message'] ?? ''),
+        'privacy'             => !empty($params['privacy']) ? '1' : '0',
+        'consent_privacy'     => (isset($params['consent_privacy']) && (string) $params['consent_privacy'] === '1') ? '1' : '0',
+        'consent_third_party' => (isset($params['consent_third_party']) && (string) $params['consent_third_party'] === '1') ? '1' : '0',
+        'source_url'          => esc_url_raw($params['source_url'] ?? home_url('/')),
+        'user_agent'          => sanitize_text_field($request->get_header('user_agent')),
+        'submitted_at'        => current_time('c'),
     );
 
     if (
@@ -111,6 +115,20 @@ function lh_handle_contact_submission(WP_REST_Request $request) {
         return new WP_Error(
             'lh_invalid_contact',
             '必須項目を確認してください。',
+            array('status' => 400)
+        );
+    }
+
+    if ($payload['consent_privacy'] !== '1' || $payload['consent_third_party'] !== '1') {
+        error_log(sprintf(
+            '[LH Contact] REJECT id=%s reason=consent_missing privacy=%s third_party=%s',
+            $submission_id,
+            $payload['consent_privacy'],
+            $payload['consent_third_party']
+        ));
+        return new WP_Error(
+            'lh_missing_consent',
+            '同意が必要な項目を確認してください。',
             array('status' => 400)
         );
     }

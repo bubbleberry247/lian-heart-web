@@ -444,10 +444,14 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
                     <table class="shop-info-table">
                         <tbody>
                             <?php foreach ($company['rows'] as $row) : ?>
-                                <?php if (empty($row['label']) || empty($row['value'])) { continue; } ?>
+                                <?php
+                                $row_label = trim((string) ($row['label'] ?? ''));
+                                $row_value = is_array($row['value'] ?? null) ? implode(' ', array_filter(array_map('trim', $row['value']))) : trim((string) ($row['value'] ?? ''));
+                                if ($row_label === '' || lh_is_placeholder_value($row_value)) { continue; }
+                                ?>
                                 <tr>
-                                    <th><?php echo esc_html($row['label']); ?></th>
-                                    <td><?php echo esc_html(is_array($row['value']) ? implode(' ', $row['value']) : $row['value']); ?></td>
+                                    <th><?php echo esc_html($row_label); ?></th>
+                                    <td><?php echo esc_html($row_value); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -500,6 +504,10 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
                             <p><?php echo esc_html($contact['success_body']); ?></p>
                         </div>
                         <form class="contact-form js-contact-form" novalidate>
+                            <div class="contact-form__disclosure">
+                                <p>※ご相談者さまから料金はいただきません。ご入居が決まった場合に施設から紹介手数料を受け取る場合があります（<a href="<?php echo esc_url(home_url('/fees-disclosure/')); ?>">手数料の開示</a>）。当社がすべての施設を紹介できるわけではありません（<a href="<?php echo esc_url(home_url('/fees-disclosure/')); ?>">紹介範囲について</a>）。ご相談内容は施設への打診に必要な範囲で利用します（<a href="<?php echo esc_url(home_url('/privacy-policy/')); ?>">個人情報の取り扱い</a>）。</p>
+                                <p>ご本人以外（ご家族等）がご相談される場合、ご本人の状況をご家族から伺います。</p>
+                            </div>
                             <div class="contact-form__grid">
                                 <label class="contact-field">
                                     <span>お名前<span class="required">*</span></span>
@@ -507,7 +515,7 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
                                 </label>
                                 <label class="contact-field">
                                     <span>メールアドレス<span class="required">*</span></span>
-                                    <input type="email" name="email" placeholder="info@example.co.jp" required>
+                                    <input type="email" name="email" placeholder="メールアドレスをご入力ください。" required>
                                 </label>
                                 <label class="contact-field">
                                     <span>電話番号<span class="required">*</span></span>
@@ -527,6 +535,10 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
                                 foreach ($company['rows'] as $row) {
                                     $row_label = trim((string) ($row['label'] ?? ''));
                                     $row_value = trim((string) ($row['value'] ?? ''));
+                                    if (lh_is_placeholder_value($row_value)) {
+                                        continue;
+                                    }
+
                                     if ($row_label === '所在地') {
                                         $privacy_address = $row_value;
                                     } elseif ($row_label === '電話番号') {
@@ -556,14 +568,20 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
                                     <p>7. お問い合わせ窓口</p>
                                     <p>個人情報の取扱いに関するお問い合わせは、以下までご連絡ください。</p>
                                     <p>【Webの場合】<br>お問い合わせフォームよりお問い合わせください。</p>
-                                    <p>【郵送の場合】<br>所在地：<?php echo esc_html($privacy_address !== '' ? $privacy_address : '〒460-0000 愛知県名古屋市中区○○1-2-3 ○○ビル5F'); ?><br><?php echo esc_html($privacy_company_name); ?><?php if ($privacy_phone !== '') : ?><br>TEL：<?php echo esc_html($privacy_phone); ?><?php endif; ?><?php if ($privacy_email !== '') : ?><br>MAIL：<?php echo esc_html($privacy_email); ?><?php endif; ?></p>
+                                    <?php if ($privacy_address !== '' || $privacy_phone !== '' || $privacy_email !== '') : ?>
+                                        <p>【郵送の場合】<?php if ($privacy_address !== '') : ?><br>所在地：<?php echo esc_html($privacy_address); ?><?php endif; ?><br><?php echo esc_html($privacy_company_name); ?><?php if ($privacy_phone !== '') : ?><br>TEL：<?php echo esc_html($privacy_phone); ?><?php endif; ?><?php if ($privacy_email !== '') : ?><br>MAIL：<?php echo esc_html($privacy_email); ?><?php endif; ?></p>
+                                    <?php endif; ?>
                                     <p>8. 改定</p>
                                     <p>本ポリシーは、法令改正や運用見直しに応じて改定することがあります。改定後の内容は、本サイトに掲載した時点で効力を生じます。</p>
                                 </div>
                             </div>
                             <label class="contact-field contact-field--privacy">
-                                <input type="checkbox" name="privacy" value="1" required>
-                                <span><a href="#privacy-policy">プライバシーポリシー</a>に同意する<span class="required">*</span></span>
+                                <input type="checkbox" name="consent_privacy" value="1" required>
+                                <span>個人情報の取得・利用目的に同意します（介護度・認知症の状況など健康に関する情報を含みます／<a href="<?php echo esc_url(home_url('/privacy-policy/')); ?>">プライバシーポリシー</a>）<span class="required">*</span></span>
+                            </label>
+                            <label class="contact-field contact-field--privacy">
+                                <input type="checkbox" name="consent_third_party" value="1" required>
+                                <span>条件に合う施設・医療介護関係者への情報提供（第三者提供）に同意します<span class="required">*</span></span>
                             </label>
                             <input class="contact-form__honeypot" type="text" name="website" tabindex="-1" autocomplete="off">
                             <input type="hidden" name="source_url" value="">

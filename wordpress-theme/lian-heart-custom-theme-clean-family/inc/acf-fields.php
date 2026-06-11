@@ -486,6 +486,8 @@ function lh_register_acf_fields() {
             lh_acf_image('field_lh_article_hero_image', 'ヒーロー画像', 'lh_article_hero_image'),
             lh_acf_text('field_lh_article_cta_title', 'CTA見出し', 'lh_article_cta_title'),
             lh_acf_textarea('field_lh_article_cta_body', 'CTA本文', 'lh_article_cta_body', 3),
+            lh_acf_textarea('field_lh_article_sources', '出典（1行1件・形式: 表記｜URL）', 'lh_article_sources', 6),
+            lh_acf_textarea('field_lh_article_meta_description', 'meta description', 'lh_article_meta_description', 3),
         ),
     ));
 }
