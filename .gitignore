@@ -37,3 +37,20 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# credentials & deploy temp (絶対にコミットしない)
+deploy/tmp-*
+deploy/sftp-config.ps1
+deploy/artifacts/
+
+# claude code local settings
+.claude/settings.local.json
+
+# work artifacts (screenshots, scratch files)
+.playwright-mcp/
+/ab-*.png
+/compare-*.png
+/concept-section-desktop.png
+/_tmp_*
+/_live_after_patch.html
+/_remote-next-inc/
