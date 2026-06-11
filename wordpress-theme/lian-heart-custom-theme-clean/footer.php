@@ -36,7 +36,7 @@ $footer_nav = array(
         </div>
         <nav class="site-footer__nav" aria-label="フッターナビゲーション">
             <?php foreach ($footer_nav as $href => $label) : ?>
-                <a href="<?php echo esc_url($href); ?>"><?php echo esc_html($label); ?></a>
+                <a href="<?php echo esc_url(lh_resolve_anchor_url($href)); ?>"><?php echo esc_html($label); ?></a>
             <?php endforeach; ?>
         </nav>
         <p class="site-footer__copy"><?php echo esc_html($brand['copyright']); ?></p>

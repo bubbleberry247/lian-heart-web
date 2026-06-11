@@ -14,6 +14,11 @@ type CompanyInfoItem = {
   value: string;
 };
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
+const siteImage = siteUrl ? `${siteUrl}/images/hero-care.jpg` : undefined;
+const isPlaceholderContact = (value: string) => /example|0000|○○|sample/i.test(value);
+const hasRealAddress = !isPlaceholderContact(lpContent.company.address);
+
 export default async function Home({
   searchParams,
 }: {
@@ -34,29 +39,38 @@ export default async function Home({
       {
         "@type": "Organization",
         name: lpContent.brand,
-        url: process.env.NEXT_PUBLIC_SITE_URL || "https://example.com",
-        areaServed: lpContent.serviceArea,
+        ...(siteUrl ? { url: siteUrl } : {}),
+        ...(siteImage ? { logo: siteImage } : {}),
       },
       {
         "@type": "LocalBusiness",
         name: lpContent.brand,
         description: lpContent.metadata.description,
-        areaServed: lpContent.serviceArea,
-        telephone: lpContent.company.phone,
-        email: lpContent.company.email,
-        address: {
-          "@type": "PostalAddress",
-          postalCode: lpContent.company.postalCode.replace("〒", ""),
-          addressLocality: lpContent.company.addressLocality,
-          addressRegion: lpContent.company.addressRegion,
-          addressCountry: "JP",
-          streetAddress: lpContent.company.address,
+        ...(siteUrl ? { url: siteUrl } : {}),
+        ...(siteImage ? { image: siteImage } : {}),
+        areaServed: {
+          "@type": "AdministrativeArea",
+          name: lpContent.serviceArea,
         },
+        ...(!isPlaceholderContact(lpContent.company.phone) ? { telephone: lpContent.company.phone } : {}),
+        ...(!isPlaceholderContact(lpContent.company.email) ? { email: lpContent.company.email } : {}),
+        ...(hasRealAddress
+          ? {
+              address: {
+                "@type": "PostalAddress",
+                postalCode: lpContent.company.postalCode.replace("〒", ""),
+                addressLocality: lpContent.company.addressLocality,
+                addressRegion: lpContent.company.addressRegion,
+                addressCountry: "JP",
+                streetAddress: lpContent.company.address,
+              },
+            }
+          : {}),
         contactPoint: {
           "@type": "ContactPoint",
           contactType: "customer support",
-          telephone: lpContent.company.phone,
-          email: lpContent.company.email,
+          ...(!isPlaceholderContact(lpContent.company.phone) ? { telephone: lpContent.company.phone } : {}),
+          ...(!isPlaceholderContact(lpContent.company.email) ? { email: lpContent.company.email } : {}),
           areaServed: lpContent.serviceArea,
         },
       },
@@ -64,7 +78,39 @@ export default async function Home({
         "@type": "WebSite",
         name: lpContent.brand,
         description: lpContent.metadata.description,
-        url: process.env.NEXT_PUBLIC_SITE_URL || "https://example.com",
+        ...(siteUrl ? { url: siteUrl } : {}),
+      },
+      {
+        "@type": "WebPage",
+        name: lpContent.metadata.title,
+        description: lpContent.metadata.description,
+        inLanguage: "ja",
+        ...(siteUrl ? { url: siteUrl } : {}),
+      },
+      {
+        "@type": "Service",
+        name: "老人ホーム紹介・入居相談",
+        serviceType: "介護施設紹介",
+        provider: {
+          "@type": "Organization",
+          name: lpContent.brand,
+        },
+        areaServed: {
+          "@type": "AdministrativeArea",
+          name: lpContent.serviceArea,
+        },
+        description: lpContent.hero.description,
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: lpContent.faq.items.map((item) => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.answer,
+          },
+        })),
       },
     ],
   };

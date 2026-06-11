@@ -1,19 +1,14 @@
 param(
-    [string]$ThemeName = 'lian-heart-custom-theme'
+    [string]$ThemeName = 'lian-heart-custom-theme-clean-family'
 )
 
 $ErrorActionPreference = 'Stop'
 
-$themeRoot = Join-Path $PSScriptRoot $ThemeName
-$zipPath = Join-Path $PSScriptRoot ($ThemeName + '.zip')
-
-if (-not (Test-Path $themeRoot)) {
-    throw "Theme directory not found: $themeRoot"
+$builder = Join-Path $PSScriptRoot '..\deploy\build-theme-artifact.ps1'
+if (-not (Test-Path $builder)) {
+    throw "Build helper not found: $builder"
 }
 
-if (Test-Path $zipPath) {
-    Remove-Item $zipPath -Force
-}
+Write-Warning "package-theme.ps1 is a compatibility wrapper. Use deploy\\build-theme-artifact.ps1 directly for normal releases."
 
-Compress-Archive -Path (Join-Path $themeRoot '*') -DestinationPath $zipPath -Force
-Write-Host "Created: $zipPath"
+& $builder -ThemeName $ThemeName -ThemesRoot $PSScriptRoot

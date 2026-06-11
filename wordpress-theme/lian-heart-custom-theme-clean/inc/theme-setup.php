@@ -245,17 +245,17 @@ function lh_theme_defaults() {
                 array(
                     'desktop_image' => lh_theme_asset_uri('assets/media/hero-slide-01-desktop.jpg'),
                     'mobile_image'  => lh_theme_asset_uri('assets/media/hero-slide-01-mobile.jpg'),
-                    'alt'           => 'ヒーロー画像 01',
+                    'alt'           => '老人ホーム紹介の相談をするご家族とスタッフ',
                 ),
                 array(
                     'desktop_image' => lh_theme_asset_uri('assets/media/hero-slide-02-desktop.jpg'),
                     'mobile_image'  => lh_theme_asset_uri('assets/media/hero-slide-02-mobile.jpg'),
-                    'alt'           => 'ヒーロー画像 02',
+                    'alt'           => '介護施設の見学前に条件を整理する相談風景',
                 ),
                 array(
                     'desktop_image' => lh_theme_asset_uri('assets/media/hero-slide-03-desktop.jpg'),
                     'mobile_image'  => lh_theme_asset_uri('assets/media/hero-slide-03-mobile.jpg'),
-                    'alt'           => 'ヒーロー画像 03',
+                    'alt'           => '愛知県で老人ホーム候補を比較する入居相談',
                 ),
             ),
             'ctas' => array(
@@ -305,9 +305,9 @@ function lh_theme_defaults() {
                 '見学前の整理から比較まで伴走し、納得できる入居相談につなげます。',
             ),
             'visuals'  => array(
-                array('image' => lh_theme_asset_uri('assets/media/concept-visual-01.jpg'), 'alt' => 'コンセプト画像 01'),
-                array('image' => lh_theme_asset_uri('assets/media/concept-visual-02.jpg'), 'alt' => 'コンセプト画像 02'),
-                array('image' => lh_theme_asset_uri('assets/media/concept-visual-03.jpg'), 'alt' => 'コンセプト画像 03'),
+                array('image' => lh_theme_asset_uri('assets/media/concept-visual-01.jpg'), 'alt' => '入居相談でご本人の希望と条件を整理する様子'),
+                array('image' => lh_theme_asset_uri('assets/media/concept-visual-02.jpg'), 'alt' => '老人ホーム紹介で施設候補を比較する資料'),
+                array('image' => lh_theme_asset_uri('assets/media/concept-visual-03.jpg'), 'alt' => '介護施設選びを家族で話し合うイメージ'),
             ),
         ),
         'pride' => array(
@@ -624,13 +624,28 @@ function lh_register_theme_supports() {
 }
 add_action('after_setup_theme', 'lh_register_theme_supports');
 
+function lh_plain_text($value, $max_length = 0) {
+    if (is_array($value)) {
+        $value = implode(' ', array_map('lh_plain_text', $value));
+    }
+
+    $text = wp_strip_all_tags((string) $value);
+    $text = preg_replace('/\s+/u', ' ', trim($text));
+
+    if ($max_length > 0 && function_exists('mb_strlen') && mb_strlen($text, 'UTF-8') > $max_length) {
+        return rtrim(mb_substr($text, 0, $max_length - 1, 'UTF-8')) . '…';
+    }
+
+    return $text;
+}
+
 function lh_document_title_parts($title) {
     $brand = lh_theme_data()['brand'] ?? array();
     $site_name = $brand['site_name'] ?? '';
     $tagline = $brand['tagline'] ?? '';
 
     if (empty($title['title'])) {
-        $title['title'] = $site_name;
+        $title['title'] = is_singular() ? single_post_title('', false) : $site_name;
     }
     if (empty($title['site']) && $site_name !== '') {
         $title['site'] = $site_name;
@@ -664,6 +679,257 @@ function lh_output_favicon() {
     echo '<link rel="apple-touch-icon" href="' . esc_url($logo_url) . '">' . "\n";
 }
 add_action('wp_head', 'lh_output_favicon', 1);
+
+function lh_should_noindex() {
+    if (defined('LH_FORCE_NOINDEX')) {
+        return (bool) LH_FORCE_NOINDEX;
+    }
+
+    $host = wp_parse_url(home_url('/'), PHP_URL_HOST);
+    $host = strtolower((string) ($host ?: ($_SERVER['HTTP_HOST'] ?? '')));
+
+    return $host === '' ||
+        $host === 'localhost' ||
+        strpos($host, '127.') === 0 ||
+        substr($host, -6) === '.local' ||
+        substr($host, -5) === '.test';
+}
+
+function lh_get_company_row($label) {
+    $company = lh_theme_data()['company'] ?? array();
+
+    foreach ((array) ($company['rows'] ?? array()) as $row) {
+        if (($row['label'] ?? '') === $label) {
+            return lh_plain_text($row['value'] ?? '');
+        }
+    }
+
+    return '';
+}
+
+function lh_is_placeholder_value($value) {
+    return $value === '' || preg_match('/example|0000|○○|sample/i', $value);
+}
+
+function lh_get_meta_description() {
+    if (is_singular()) {
+        $excerpt = get_the_excerpt();
+        if ($excerpt !== '') {
+            return lh_plain_text($excerpt, 155);
+        }
+    }
+
+    $theme = lh_theme_data();
+    $hero = $theme['hero'] ?? array();
+    $brand = $theme['brand'] ?? array();
+    $description = $hero['description'] ?? ($brand['tagline'] ?? '');
+
+    return lh_plain_text($description, 155);
+}
+
+function lh_get_canonical_url() {
+    if (is_front_page()) {
+        return home_url('/');
+    }
+
+    if (is_singular()) {
+        $permalink = get_permalink();
+        if (is_string($permalink) && $permalink !== '') {
+            return $permalink;
+        }
+    }
+
+    $request = isset($GLOBALS['wp']->request) ? trim((string) $GLOBALS['wp']->request, '/') : '';
+    return $request !== '' ? home_url('/' . $request . '/') : home_url('/');
+}
+
+function lh_get_primary_image_url() {
+    if (is_singular() && has_post_thumbnail()) {
+        $image = get_the_post_thumbnail_url(get_the_ID(), 'full');
+        if (is_string($image) && $image !== '') {
+            return $image;
+        }
+    }
+
+    $theme = lh_theme_data();
+    $hero = $theme['hero'] ?? array();
+    $slides = (array) ($hero['slides'] ?? array());
+    $first_slide = $slides[0] ?? array();
+
+    return (string) ($first_slide['desktop_image'] ?? (($theme['brand']['logo'] ?? '')));
+}
+
+function lh_output_meta_tags() {
+    if (is_admin()) {
+        return;
+    }
+
+    $theme = lh_theme_data();
+    $brand = $theme['brand'] ?? array();
+    $title = wp_get_document_title();
+    $description = lh_get_meta_description();
+    $canonical = lh_get_canonical_url();
+    $image = lh_get_primary_image_url();
+    $site_name = $brand['site_name'] ?? get_bloginfo('name');
+
+    echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
+    echo '<link rel="canonical" href="' . esc_url($canonical) . '">' . "\n";
+    echo '<meta property="og:locale" content="ja_JP">' . "\n";
+    echo '<meta property="og:type" content="' . (is_singular() && !is_front_page() ? 'article' : 'website') . '">' . "\n";
+    echo '<meta property="og:site_name" content="' . esc_attr($site_name) . '">' . "\n";
+    echo '<meta property="og:title" content="' . esc_attr($title) . '">' . "\n";
+    echo '<meta property="og:description" content="' . esc_attr($description) . '">' . "\n";
+    echo '<meta property="og:url" content="' . esc_url($canonical) . '">' . "\n";
+
+    if ($image !== '') {
+        echo '<meta property="og:image" content="' . esc_url($image) . '">' . "\n";
+        echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
+        echo '<meta name="twitter:image" content="' . esc_url($image) . '">' . "\n";
+    }
+
+    echo '<meta name="twitter:title" content="' . esc_attr($title) . '">' . "\n";
+    echo '<meta name="twitter:description" content="' . esc_attr($description) . '">' . "\n";
+}
+add_action('wp_head', 'lh_output_meta_tags', 2);
+
+function lh_output_structured_data() {
+    if (is_admin() || lh_should_noindex()) {
+        return;
+    }
+
+    $theme = lh_theme_data();
+    $brand = $theme['brand'] ?? array();
+    $company = $theme['company'] ?? array();
+    $home_url = home_url('/');
+    $canonical = lh_get_canonical_url();
+    $site_name = lh_plain_text($brand['site_name'] ?? get_bloginfo('name'));
+    $description = lh_get_meta_description();
+    $logo = (string) ($brand['logo'] ?? '');
+    $image = lh_get_primary_image_url();
+    $phone = lh_get_company_row('電話番号');
+    $email = lh_get_company_row('メール');
+    $address = lh_get_company_row('所在地');
+    $business_hours = lh_get_company_row('営業時間');
+
+    $organization = array(
+        '@type' => 'Organization',
+        '@id' => $home_url . '#organization',
+        'name' => $site_name,
+        'url' => $home_url,
+    );
+
+    if ($logo !== '') {
+        $organization['logo'] = $logo;
+    }
+
+    $local_business = array(
+        '@type' => 'LocalBusiness',
+        '@id' => $home_url . '#localbusiness',
+        'name' => $site_name,
+        'url' => $home_url,
+        'description' => $description,
+        'areaServed' => array(
+            '@type' => 'AdministrativeArea',
+            'name' => '愛知県全域',
+        ),
+        'priceRange' => '無料相談',
+    );
+
+    if ($image !== '') {
+        $local_business['image'] = $image;
+    }
+    if (!lh_is_placeholder_value($phone)) {
+        $local_business['telephone'] = $phone;
+    }
+    if (!lh_is_placeholder_value($email)) {
+        $local_business['email'] = $email;
+    }
+    if (!lh_is_placeholder_value($address)) {
+        $local_business['address'] = array(
+            '@type' => 'PostalAddress',
+            'streetAddress' => $address,
+            'addressRegion' => '愛知県',
+            'addressCountry' => 'JP',
+        );
+    }
+    if (preg_match('/(\d{1,2}:\d{2})\s*[-〜]\s*(\d{1,2}:\d{2})/u', $business_hours, $matches)) {
+        $local_business['openingHoursSpecification'] = array(
+            array(
+                '@type' => 'OpeningHoursSpecification',
+                'dayOfWeek' => array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'),
+                'opens' => $matches[1],
+                'closes' => $matches[2],
+            ),
+        );
+    }
+
+    $graph = array(
+        array(
+            '@type' => 'WebSite',
+            '@id' => $home_url . '#website',
+            'url' => $home_url,
+            'name' => $site_name,
+            'inLanguage' => 'ja',
+            'publisher' => array('@id' => $home_url . '#organization'),
+        ),
+        $organization,
+        $local_business,
+        array(
+            '@type' => 'Service',
+            '@id' => $home_url . '#service',
+            'name' => '老人ホーム紹介・入居相談',
+            'serviceType' => '介護施設紹介',
+            'provider' => array('@id' => $home_url . '#localbusiness'),
+            'areaServed' => array('@type' => 'AdministrativeArea', 'name' => '愛知県全域'),
+            'description' => lh_plain_text($theme['hero']['description'] ?? $description),
+        ),
+        array(
+            '@type' => 'WebPage',
+            '@id' => $canonical . '#webpage',
+            'url' => $canonical,
+            'name' => wp_get_document_title(),
+            'description' => $description,
+            'inLanguage' => 'ja',
+            'isPartOf' => array('@id' => $home_url . '#website'),
+            'about' => array('@id' => $home_url . '#localbusiness'),
+        ),
+    );
+
+    if (is_front_page() && !empty($theme['qa']['items'])) {
+        $faq_items = array();
+        foreach (array_slice((array) $theme['qa']['items'], 0, 8) as $item) {
+            $question = lh_plain_text($item['question'] ?? '');
+            $answer = lh_plain_text($item['answer'] ?? '');
+            if ($question === '' || $answer === '') {
+                continue;
+            }
+            $faq_items[] = array(
+                '@type' => 'Question',
+                'name' => $question,
+                'acceptedAnswer' => array(
+                    '@type' => 'Answer',
+                    'text' => $answer,
+                ),
+            );
+        }
+
+        if (!empty($faq_items)) {
+            $graph[] = array(
+                '@type' => 'FAQPage',
+                '@id' => $canonical . '#faq',
+                'mainEntity' => $faq_items,
+            );
+        }
+    }
+
+    $schema = array(
+        '@context' => 'https://schema.org',
+        '@graph' => $graph,
+    );
+
+    echo '<script type="application/ld+json">' . wp_json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . '</script>' . "\n";
+}
+add_action('wp_head', 'lh_output_structured_data', 20);
 
 function lh_enqueue_assets() {
     $theme_version = lh_theme_version();
@@ -730,11 +996,47 @@ function lh_enqueue_assets() {
 add_action('wp_enqueue_scripts', 'lh_enqueue_assets');
 
 function lh_add_robots_meta() {
-    if (wp_get_environment_type() !== 'production') {
+    if (lh_should_noindex()) {
         echo '<meta name="robots" content="noindex,nofollow">' . "\n";
+        return;
     }
+
+    echo '<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">' . "\n";
 }
 add_action('wp_head', 'lh_add_robots_meta', 1);
+
+function lh_filter_robots_txt($output, $public) {
+    if (lh_should_noindex() || (int) $public !== 1) {
+        return $output;
+    }
+
+    $ai_policy = array(
+        '',
+        '# AI search crawler policy',
+        'User-agent: OAI-SearchBot',
+        'Allow: /',
+        'User-agent: ChatGPT-User',
+        'Allow: /',
+        'User-agent: Claude-SearchBot',
+        'Allow: /',
+        'User-agent: Claude-User',
+        'Allow: /',
+        'User-agent: PerplexityBot',
+        'Allow: /',
+        'User-agent: GPTBot',
+        'Disallow: /',
+        'User-agent: ClaudeBot',
+        'Disallow: /',
+        'User-agent: Google-Extended',
+        'Disallow: /',
+        'User-agent: CCBot',
+        'Disallow: /',
+        'Sitemap: ' . home_url('/wp-sitemap.xml'),
+    );
+
+    return rtrim($output) . "\n" . implode("\n", $ai_policy) . "\n";
+}
+add_filter('robots_txt', 'lh_filter_robots_txt', 20, 2);
 
 function lh_register_options_page() {
     if (!function_exists('acf_add_options_page')) {
@@ -750,4 +1052,3 @@ function lh_register_options_page() {
     ));
 }
 add_action('acf/init', 'lh_register_options_page');
-

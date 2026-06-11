@@ -49,7 +49,7 @@ if (is_array($header_cta)) {
         <div class="g-header__nav-block" id="site-navigation">
             <nav class="g-header__nav" aria-label="グローバルナビゲーション">
                 <?php foreach ($nav_items as $href => $label) : ?>
-                    <a href="<?php echo esc_url($href); ?>"><?php echo esc_html($label); ?></a>
+                    <a href="<?php echo esc_url(lh_resolve_anchor_url($href)); ?>"><?php echo esc_html($label); ?></a>
                 <?php endforeach; ?>
             </nav>
             <div class="g-header__cta">
