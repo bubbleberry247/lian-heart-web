@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('LH_CONTENT_SEEDS_VERSION', '4');
+define('LH_CONTENT_SEEDS_VERSION', '5');
 
 function lh_content_seed_manifest() {
     $manifest_path = get_template_directory() . '/content-seeds/manifest.json';
@@ -60,33 +60,44 @@ function lh_ensure_content_pages() {
 
     $seed_dir = trailingslashit(get_template_directory()) . 'content-seeds/';
 
+    // v5一回限りの是正対象: シーダーv3が誤って公開し、プレースホルダーを欠いた
+    // 本文で作成してしまった信頼基盤4ページ。下書きへ戻し、本文を正本シード
+    // （プレースホルダー付き）へ置き換える。公開判断は必ず人間が行う。
+    $corrective_slugs = array(
+        'about-editorial-policy',
+        'fees-disclosure',
+        'consultation-policy',
+        'privacy-policy',
+    );
+
     foreach ($manifest as $slug => $entry) {
         if (!is_string($slug) || $slug === '' || !is_array($entry)) {
             continue;
         }
 
+        $html_path = $seed_dir . $slug . '.html';
         $existing_page = get_page_by_path($slug);
 
         if ($existing_page instanceof WP_Post) {
-            // 一回限りの是正: プレースホルダー(lh-todo)が残ったまま公開状態に
-            // なっているシード由来ページを下書きへ戻す。公開判断は必ず人間が行う。
-            if (
-                $existing_page->post_status === 'publish' &&
-                strpos((string) $existing_page->post_content, 'lh-todo') !== false
-            ) {
-                wp_update_post(
-                    array(
-                        'ID'          => (int) $existing_page->ID,
-                        'post_status' => 'draft',
-                    ),
-                    true
+            if (in_array($slug, $corrective_slugs, true)) {
+                $update = array(
+                    'ID'          => (int) $existing_page->ID,
+                    'post_status' => 'draft',
                 );
+
+                if (file_exists($html_path)) {
+                    $replacement = file_get_contents($html_path);
+                    if (is_string($replacement) && trim($replacement) !== '') {
+                        $update['post_content'] = $replacement;
+                    }
+                }
+
+                wp_update_post($update, true);
+                lh_apply_content_seed_meta((int) $existing_page->ID, $entry);
             }
-            // それ以外の既存ページは内容・状態・メタとも一切変更しない。
+            // 是正対象以外の既存ページは内容・状態・メタとも一切変更しない。
             continue;
         }
-
-        $html_path = $seed_dir . $slug . '.html';
         if (!file_exists($html_path)) {
             continue;
         }
