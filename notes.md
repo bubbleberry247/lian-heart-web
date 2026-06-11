@@ -1,6 +1,8 @@
 # notes.md — 作業ノート（リアンハートLP）
 
-最終更新: 2026-06-11（git push完了まで） ／ ブランチ: feat/security-seo-hardening（origin同期済み @3c3ad9d）
+最終更新: 2026-06-12 ／ ブランチ: feat/security-seo-hardening（origin同期済み @cc43d4c）
+関連ブランチ: wip/legacy-clean-theme-2026-03（3月の旧cleanテーマ/Next.js未確定変更のバックアップ。未レビュー・デプロイ対象外。作業ツリーからは除去済み＝必要時はこのブランチをcheckout）
+git運用メモ: tracked変更ゼロ。残る未追跡44件はgitignore済みのスクリーンショット・tmp類のみ。**FTPパスワード平文を一度notes.mdにコミットしかけたが、未pushのうちにamendで履歴から排除済み**（認証情報は今後も deploy/tmp-lftp-*.txt ※git管理外にのみ置く）
 
 ## ゴール
 AEO/GEOコンテンツ（4+1ハブ＝記事12本＋信頼基盤4ページ）を公開し、noindex解除で本公開に到達する。
