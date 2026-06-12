@@ -1,6 +1,8 @@
 # notes.md — 作業ノート（リアンハートLP）
 
-最終更新: 2026-06-12 ／ ブランチ: feat/security-seo-hardening（origin同期済み @cc43d4c）
+最終更新: 2026-06-12（セッション終了処理済み） ／ ブランチ: feat/security-seo-hardening（同期状態は `git status` と `git log origin/feat/security-seo-hardening..HEAD` で確認）
+
+**次回セッションの入口**: 「残タスク」参照。客先回答が届いたら→残タスク3（実データ反映）から再開。メール未送信なら→残タスク1の案内から。
 関連ブランチ: wip/legacy-clean-theme-2026-03（3月の旧cleanテーマ/Next.js未確定変更のバックアップ。未レビュー・デプロイ対象外。作業ツリーからは除去済み＝必要時はこのブランチをcheckout）
 git運用メモ: tracked変更ゼロ。残る未追跡44件はgitignore済みのスクリーンショット・tmp類のみ。**FTPパスワード平文を一度notes.mdにコミットしかけたが、未pushのうちにamendで履歴から排除済み**（認証情報は今後も deploy/tmp-lftp-*.txt ※git管理外にのみ置く）
 
