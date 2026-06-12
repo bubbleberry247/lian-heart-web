@@ -25,13 +25,20 @@ AEO/GEOコンテンツ（4+1ハブ＝記事12本＋信頼基盤4ページ）を�
 - **lftpデプロイは毎回ユーザー実行**: 分類器が本番FTP+認証情報を自動承認しない。コマンド: `C:\cygwin64\bin\lftp.exe -f "/cygdrive/c/ProgramData/Generative AI/Github/Lian-Heart_web/deploy/tmp-lftp-aeo-deploy.txt"`（パスは/cygdrive形式必須）。アップ後にWP管理画面を1回開く（シーダー発動）
 - **Editフック**: 「offset/limitなし全体Read」要求がharnessの読み込み上限と衝突する大ファイルは、Python一意置換（count==1をassert）で対応
 
+## 決定事項（2026-06-12・ユーザー回答）
+1. **手数料**: 施設から成約時に受領・相談者無料**で確定**（仮置き解除）
+2. **高住連届出**: **しない**（サイト上は「現時点で届出していません」と正直に記載）
+3. **監修者**: **出さない**（編集部名義で確定。資格表記の確認枠も削除）
+4. **プライバシーポリシー**: 専門家確認の「推奨」記載は**しない**。本文はClaudeが個人情報保護委員会の指針項目に沿って完成済み→御社は読んで承認のみ
+→ 反映済み: content-seeds/fees-disclosure.html・about-editorial-policy.html・privacy-policy.html（プレースホルダーは基本情報系のみ残存）。提言書md＋Word版を改訂（決定セクション削除）。**注意: WP上の下書き3ページは旧版のまま＝公開前に新シードHTMLを管理画面で貼り替えること**（シーダーは既存ページを更新しない設計のため）
+
 ## 残タスク
-1. [ユーザー] Gmail下書きの宛先差替え＋Word添付→送信
-2. [客先回答待ち] 決定4件（手数料開示/高住連届出/監修体制/プライポリ法務確認）＋基本情報（2週間目安）、実務データ7点（1か月目安）
-3. [回答後] 下書き16ページへ実データ反映 → 客先レビュー → 公開（privacy-policy→運営情報→記事の順）
+1. [ユーザー] **改訂版Gmail下書き（r2909114133704879920・件名「…（提言書・改訂版）」）**の宛先差替え＋Word添付（デスクトップ: リアンハート様_サイト公開前ご提供事項_提言書_20260612.docx）→送信。**旧下書き（6/11付・旧Word）は削除**
+2. [客先回答待ち] 基本情報4点（2週間目安）＋実務データ7点（1か月目安）※決定4件は回答済みで不要に
+3. [回答後] 下書き16ページへ実データ反映（信頼基盤3ページは新シードHTMLへ貼り替えも）→ 客先レビュー → 公開（privacy-policy→運営情報→記事の順）
 4. [公開後] Xserver無料SSL→https化→「検索エンジン避け」OFF→パーマリンク投稿名→GSC/Bing登録→AI検索引用の定期計測
 5. knowledge-after-discharge（退院ピラー）の改稿は公開時に手動貼替（content-seeds/knowledge-after-discharge.html）
-6. **次回デプロイ時に inc/content-seeds.php の最新版（3c3ad9d）を含める**: Codexレビュー反映で是正ブロック撤去＋失敗時バージョン非更新に改善。本番は旧v5コードだがoption=5のため再実行されず実害なし（急ぎではない）
+6. **次回デプロイ時に inc/content-seeds.php の最新版＋content-seeds/*.html改訂版を含める**: 是正ブロック撤去＋失敗時バージョン非更新＋決定事項反映版シード。本番は旧版だがdraft運用のため実害なし（急ぎではない）
 
 ## セキュリティTODO（自動レビュー指摘・2026-06-12）
 - **deploy/push-theme-via-sftp.ps1 と deploy/tmp-lftp-*.txt の `set ssl:verify-certificate no`（TLS検証無効）**: 3月からの既存設定。MITMでFTP認証情報が窃取されるリスク。次回デプロイ時に (1)`verify-certificate no` を外して接続テスト（Xserver FTPSは通常正規証明書。失敗ならCygwinのCAバンドルを `ssl:ca-file` で指定） (2)可能なら ftp:// → sftp://（SSH）+ known_hosts へ移行。**動作中の経路なので未テストで書き換えない**
