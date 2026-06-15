@@ -14,6 +14,14 @@ function lh_contact_category_options() {
     );
 }
 
+function lh_contact_inquiry_topic_options() {
+    return array(
+        'facility_search'  => '施設探し・見学調整',
+        'urgent_discharge' => '退院後・急ぎの入居相談',
+        'other'            => 'その他',
+    );
+}
+
 function lh_contact_recipient_emails() {
     $contact = lh_get_option_group('contact');
     $emails  = array();
@@ -46,14 +54,13 @@ function lh_contact_mail_body(array $payload) {
         '送信ID: ' . $payload['submission_id'],
         '送信日時: ' . $payload['submitted_at'],
         '用件: ' . $payload['category_label'] . '（' . $payload['category'] . '）',
+        'ご相談内容: ' . $payload['inquiry_topic_label'] . '（' . $payload['inquiry_topic'] . '）',
         'お名前: ' . $payload['name'],
         'メールアドレス: ' . $payload['email'],
         '電話番号: ' . $payload['phone'],
         '',
         '同意・証跡:',
-        'プライバシーポリシー同意: ' . ($payload['privacy'] === '1' ? '同意済み' : '未同意'),
-        '個人情報の取得・利用同意: ' . (($payload['consent_privacy'] ?? '') === '1' ? '同意済み' : '未同意'),
-        '第三者提供同意: ' . (($payload['consent_third_party'] ?? '') === '1' ? '同意済み' : '未同意'),
+        '個人情報の取り扱い同意（第三者提供を含む）: ' . (($payload['consent_privacy'] ?? '') === '1' ? '同意済み' : '未同意'),
         '一般確認同意: ' . (($payload['consent_general'] ?? '') === '1' ? '同意済み' : '未同意'),
         '法人営業等の送信条件同意: ' . (($payload['consent_business'] ?? '') === '1' ? '同意済み' : '未同意'),
         '法人代表・代理権限確認: ' . (($payload['consent_business_authority'] ?? '') === '1' ? '同意済み' : '未同意'),
@@ -112,19 +119,22 @@ function lh_handle_contact_submission(WP_REST_Request $request) {
     set_transient($rate_key, $attempts + 1, 60);
 
     $categories = lh_contact_category_options();
+    $topics     = lh_contact_inquiry_topic_options();
     $category   = sanitize_key($params['category'] ?? '');
+    $topic      = sanitize_key($params['inquiry_topic'] ?? '');
 
     $payload = array(
         'submission_id'              => $submission_id,
         'category'                   => $category,
         'category_label'             => $categories[$category] ?? '',
+        'inquiry_topic'              => $topic,
+        'inquiry_topic_label'        => $topics[$topic] ?? '',
         'name'                       => sanitize_text_field($params['name'] ?? ''),
         'email'                      => sanitize_email($params['email'] ?? ''),
         'phone'                      => sanitize_text_field($params['phone'] ?? ''),
         'message'                    => sanitize_textarea_field($params['message'] ?? ''),
-        'privacy'                    => !empty($params['privacy']) ? '1' : '0',
+        'privacy'                    => (!empty($params['privacy']) || (isset($params['consent_privacy']) && (string) $params['consent_privacy'] === '1')) ? '1' : '0',
         'consent_privacy'            => (isset($params['consent_privacy']) && (string) $params['consent_privacy'] === '1') ? '1' : '0',
-        'consent_third_party'        => (isset($params['consent_third_party']) && (string) $params['consent_third_party'] === '1') ? '1' : '0',
         'consent_general'            => (isset($params['consent_general']) && (string) $params['consent_general'] === '1') ? '1' : '0',
         'consent_business'           => (isset($params['consent_business']) && (string) $params['consent_business'] === '1') ? '1' : '0',
         'consent_business_authority' => (isset($params['consent_business_authority']) && (string) $params['consent_business_authority'] === '1') ? '1' : '0',
@@ -140,10 +150,11 @@ function lh_handle_contact_submission(WP_REST_Request $request) {
     if (
         $payload['category'] === '' ||
         !isset($categories[$payload['category']]) ||
+        $payload['inquiry_topic'] === '' ||
+        !isset($topics[$payload['inquiry_topic']]) ||
         $payload['name'] === '' ||
         $payload['email'] === '' ||
         !is_email($payload['email']) ||
-        $payload['message'] === '' ||
         $payload['privacy'] !== '1' ||
         $payload['policy_version'] !== lh_contact_policy_version()
     ) {
@@ -184,12 +195,11 @@ function lh_handle_contact_submission(WP_REST_Request $request) {
         );
     }
 
-    if ($payload['consent_privacy'] !== '1' || $payload['consent_third_party'] !== '1') {
+    if ($payload['consent_privacy'] !== '1') {
         error_log(sprintf(
-            '[LH Contact] REJECT id=%s reason=consent_missing privacy=%s third_party=%s',
+            '[LH Contact] REJECT id=%s reason=consent_missing privacy=%s',
             $submission_id,
-            $payload['consent_privacy'],
-            $payload['consent_third_party']
+            $payload['consent_privacy']
         ));
         return new WP_Error(
             'lh_missing_consent',

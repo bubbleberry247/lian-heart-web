@@ -4,6 +4,11 @@
         admission_inquiry: 'ご本人・ご親族の入居相談',
         business_proposal: '入居相談以外の直接送信'
     };
+    var TOPIC_LABELS = {
+        facility_search: '施設探し・見学調整',
+        urgent_discharge: '退院後・急ぎの入居相談',
+        other: 'その他'
+    };
 
     function onReady(callback) {
         if (document.readyState === 'loading') {
@@ -96,8 +101,8 @@
                 payload[key] = value;
             });
             payload.category = selectedCategoryValue();
+            payload.inquiry_topic = formData.get('inquiry_topic') || '';
             payload.consent_privacy = formData.get('consent_privacy') ? '1' : '0';
-            payload.consent_third_party = formData.get('consent_third_party') ? '1' : '0';
             payload.consent_general = formData.get('consent_general') ? '1' : '0';
             payload.consent_business = formData.get('consent_business') ? '1' : '0';
             payload.consent_business_authority = formData.get('consent_business_authority') ? '1' : '0';
@@ -108,7 +113,7 @@
         }
 
         function validate(payload) {
-            if (!payload.category || !payload.name || !payload.email || !payload.message) {
+            if (!payload.category || !payload.inquiry_topic || !payload.name || !payload.email) {
                 return (lhContact.messages && lhContact.messages.required) || (lhContact.messages && lhContact.messages.error) || '必須項目を入力してください。';
             }
 
@@ -116,7 +121,7 @@
                 return (lhContact.messages && lhContact.messages.required) || (lhContact.messages && lhContact.messages.error) || '必須項目を入力してください。';
             }
 
-            if (payload.consent_privacy !== '1' || payload.consent_third_party !== '1') {
+            if (payload.consent_privacy !== '1') {
                 return (lhContact.messages && lhContact.messages.consent) || '同意が必要な項目にチェックを入れてください。';
             }
 
@@ -135,6 +140,9 @@
             if (name === 'category') {
                 return '用件';
             }
+            if (name === 'inquiry_topic') {
+                return 'ご相談内容';
+            }
 
             var field = form.querySelector('[name="' + name + '"]');
             if (!field) {
@@ -151,6 +159,12 @@
                 var option = selected ? selected.closest('.contact-category-option') : null;
                 var title = option ? option.querySelector('.contact-category-option__title') : null;
                 return title ? title.textContent : (CATEGORY_LABELS[payload[name]] || payload[name]);
+            }
+            if (name === 'inquiry_topic') {
+                var selectedTopic = form.querySelector('[name="inquiry_topic"]:checked');
+                var topicOption = selectedTopic ? selectedTopic.closest('.contact-topic-option') : null;
+                var topicTitle = topicOption ? topicOption.querySelector('.contact-topic-option__title') : null;
+                return topicTitle ? topicTitle.textContent : (TOPIC_LABELS[payload[name]] || payload[name]);
             }
 
             return payload[name];
@@ -193,7 +207,7 @@
         }
 
         function renderConfirm(payload) {
-            var order = ['category', 'name', 'email', 'phone', 'message'];
+            var order = ['inquiry_topic', 'name', 'email', 'phone', 'message'];
             confirmBlock.innerHTML = '';
 
             order.forEach(function (key) {

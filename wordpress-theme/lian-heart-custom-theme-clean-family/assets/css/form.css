@@ -18,6 +18,12 @@
     color: rgba(12, 28, 31, 0.72);
 }
 
+.contact-form-block__lead a {
+    color: var(--lh-primary);
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+}
+
 .contact-form {
     margin-top: 28px;
 }
@@ -97,7 +103,18 @@
     background: rgba(253, 232, 235, 0.22);
 }
 
+.contact-field--topic {
+    margin: 0;
+    padding: 18px;
+    border: 1px solid rgba(244, 149, 162, 0.36);
+    background: rgba(253, 232, 235, 0.18);
+}
+
 .contact-field__legend {
+    display: block;
+    width: 100%;
+    margin: 0 0 12px;
+    padding: 0;
     font-size: 15px;
     font-weight: 700;
     line-height: 1.7;
@@ -202,13 +219,15 @@
     background-repeat: no-repeat;
 }
 
-.contact-category-options {
+.contact-category-options,
+.contact-topic-options {
     display: grid;
     grid-template-columns: 1fr;
     gap: 10px;
 }
 
-.contact-category-option {
+.contact-category-option,
+.contact-topic-option {
     display: flex;
     gap: 12px;
     align-items: flex-start;
@@ -219,7 +238,8 @@
     transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.contact-category-option:has(input:checked) {
+.contact-category-option:has(input:checked),
+.contact-topic-option:has(input:checked) {
     border-color: rgba(244, 149, 162, 0.82);
     background: rgba(244, 149, 162, 0.08);
     box-shadow: 0 0 0 3px rgba(244, 149, 162, 0.12);
@@ -229,7 +249,8 @@
     background: rgba(244, 149, 162, 0.12);
 }
 
-.contact-category-option input {
+.contact-category-option input,
+.contact-topic-option input {
     flex: 0 0 auto;
     width: 18px;
     height: 18px;
@@ -240,27 +261,32 @@
     accent-color: var(--lh-primary);
 }
 
-.contact-category-option input:focus {
+.contact-category-option input:focus,
+.contact-topic-option input:focus {
     box-shadow: none;
 }
 
-.contact-category-option input:focus-visible + .contact-category-option__body {
+.contact-category-option input:focus-visible + .contact-category-option__body,
+.contact-topic-option input:focus-visible + .contact-topic-option__body {
     outline: 3px solid rgba(244, 149, 162, 0.28);
     outline-offset: 4px;
 }
 
-.contact-category-option__body {
+.contact-category-option__body,
+.contact-topic-option__body {
     display: grid;
     gap: 3px;
     min-width: 0;
 }
 
-.contact-category-option__title {
+.contact-category-option__title,
+.contact-topic-option__title {
     font-size: 14px;
     line-height: 1.7;
 }
 
-.contact-category-option__note {
+.contact-category-option__note,
+.contact-topic-option__note {
     color: rgba(12, 28, 31, 0.62);
     font-size: 12px;
     line-height: 1.6;

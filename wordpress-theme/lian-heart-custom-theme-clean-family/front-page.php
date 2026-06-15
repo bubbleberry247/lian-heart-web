@@ -21,6 +21,16 @@ $facility = $theme['facility'];
 $company = $theme['company'];
 $contact = $theme['contact'];
 $business_policy_url = home_url('/business-proposal-policy/');
+$line_cta = null;
+foreach ((array) ($hero['ctas'] ?? array()) as $cta) {
+    $cta_label = trim((string) ($cta['label'] ?? ''));
+    $cta_style = trim((string) ($cta['style'] ?? ''));
+    $cta_url = trim((string) ($cta['url'] ?? ''));
+    if ($cta_url !== '' && ($cta_style === 'line' || stripos($cta_label, 'LINE') !== false)) {
+        $line_cta = $cta;
+        break;
+    }
+}
 $contact_catch = trim((string) ($contact['catch'] ?? ''));
 if ($contact_catch === '' || $contact_catch === '相談・見学調整・ご紹介はすべて無料です。') {
     $contact_catch = 'ご本人・ご親族の相談・見学調整・ご紹介は無料です。';
@@ -473,7 +483,11 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
                 <div class="contact-form-block">
                     <div class="contact-form-block__inner">
                         <h3 class="contact-form-block__title"><?php echo esc_html($contact['form_title']); ?></h3>
-                        <p class="contact-form-block__lead">メールで気軽にご相談ください。お急ぎの場合はお電話での入居相談も承っています。</p>
+                        <?php if (is_array($line_cta)) : ?>
+                            <p class="contact-form-block__lead">内容を整理して送る場合はフォーム、短文で始めたい方は<a href="<?php echo esc_url(lh_resolve_anchor_url($line_cta['url'] ?? '#contact')); ?>">LINE</a>をご利用ください。お急ぎの場合は電話番号をご入力いただくか、お電話でご相談ください。</p>
+                        <?php else : ?>
+                            <p class="contact-form-block__lead">内容を整理して送る場合はフォームをご利用ください。お急ぎの場合は電話番号をご入力いただくか、お電話でご相談ください。</p>
+                        <?php endif; ?>
                         <div class="contact-form-success" hidden>
                             <h4><?php echo esc_html($contact['success_title']); ?></h4>
                             <p><?php echo esc_html($contact['success_body']); ?></p>
@@ -483,15 +497,37 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
                             <div class="contact-form__guidance">
                                 <h4>ご相談前にご確認ください</h4>
                                 <ul>
-                                    <li>ご本人・ご親族の入居相談、見学調整、ご紹介は無料です。</li>
+                                    <li>ご本人・ご親族の入居相談、見学調整、ご紹介は無料です（<a href="<?php echo esc_url(home_url('/fees-disclosure/')); ?>">手数料・紹介範囲</a>）。</li>
                                     <li>ご相談内容を確認のうえ、2〜3営業日内を目安にご返信します。</li>
-                                    <li>ご本人以外（ご家族等）がご相談される場合、ご本人の状況をご家族から伺います。</li>
-                                    <li>病院・ケアマネジャー等からのご紹介も、入居相談として送信してください。</li>
                                 </ul>
-                                <p>ご入居が決まった場合に施設から紹介手数料を受け取る場合があります（<a href="<?php echo esc_url(home_url('/fees-disclosure/')); ?>">手数料の開示</a>）。当社がすべての施設を紹介できるわけではありません（<a href="<?php echo esc_url(home_url('/fees-disclosure/')); ?>">紹介範囲について</a>）。ご相談内容は施設への打診に必要な範囲で利用します（<a href="<?php echo esc_url(home_url('/privacy-policy/')); ?>">個人情報の取り扱い</a>）。</p>
-                                <p>法人営業・広告・採用・システム販売等の営業目的の送信はご遠慮ください。営業目的の送信が確認された場合、内容確認・記録保全等の事務対応費について、当社より請求書をお送りします（<a href="<?php echo esc_url($business_policy_url); ?>">法人営業等の送信条件</a>）。</p>
                             </div>
                             <div class="contact-form__grid">
+                                <fieldset class="contact-field contact-field--topic contact-field--full">
+                                    <legend class="contact-field__legend">ご相談内容<span class="required">*</span></legend>
+                                    <div class="contact-topic-options">
+                                        <label class="contact-topic-option">
+                                            <input type="radio" name="inquiry_topic" value="facility_search" checked required>
+                                            <span class="contact-topic-option__body">
+                                                <strong class="contact-topic-option__title">施設探し・見学調整</strong>
+                                                <span class="contact-topic-option__note">希望エリアや条件がまだ決まっていなくても大丈夫です</span>
+                                            </span>
+                                        </label>
+                                        <label class="contact-topic-option">
+                                            <input type="radio" name="inquiry_topic" value="urgent_discharge" required>
+                                            <span class="contact-topic-option__body">
+                                                <strong class="contact-topic-option__title">退院後・急ぎの入居相談</strong>
+                                                <span class="contact-topic-option__note">入居時期が近い場合はこちらを選んでください</span>
+                                            </span>
+                                        </label>
+                                        <label class="contact-topic-option">
+                                            <input type="radio" name="inquiry_topic" value="other" required>
+                                            <span class="contact-topic-option__body">
+                                                <strong class="contact-topic-option__title">その他</strong>
+                                                <span class="contact-topic-option__note">入居後の見直し、転居、紹介後のご相談など</span>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </fieldset>
                                 <label class="contact-field">
                                     <span>お名前<span class="required">*</span></span>
                                     <input type="text" name="name" placeholder="お名前をご入力ください。" required>
@@ -506,14 +542,10 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
                                     <small class="contact-field__hint">お急ぎの場合は、電話番号をご入力いただくと早くご連絡しやすくなります。メールが届かない場合のご連絡にも使用します。</small>
                                 </label>
                                 <label class="contact-field contact-field--full">
-                                    <span>お問い合わせ内容<span class="required">*</span></span>
-                                    <textarea name="message" rows="8" placeholder="お問い合わせ内容をご記入ください。" required></textarea>
+                                    <span>補足があればご記入ください<span class="optional">任意</span></span>
+                                    <textarea name="message" rows="4" placeholder="ご本人の状況、希望エリア、入居時期などを差し支えない範囲でご記入ください。"></textarea>
                                 </label>
                             </div>
-                            <label class="contact-field contact-field--privacy contact-field--general-consent js-consent-general">
-                                <input type="checkbox" name="consent_general" value="1" required>
-                                <span>ご確認事項を確認し、この送信は入居相談・お問い合わせであり、営業・広告・採用・システム販売等を目的とした送信ではありません<span class="required">*</span></span>
-                            </label>
                             <?php
                             $privacy_company_name = $brand['site_name'] ?? 'リアンハート';
                             $privacy_address = '';
@@ -566,11 +598,11 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
                             </div>
                             <label class="contact-field contact-field--privacy">
                                 <input type="checkbox" name="consent_privacy" value="1" required>
-                                <span>個人情報の取得・利用目的に同意します（介護度・認知症の状況など健康に関する情報を含みます／<a href="<?php echo esc_url(home_url('/privacy-policy/')); ?>">プライバシーポリシー</a>）<span class="required">*</span></span>
+                                <span>個人情報の取り扱いに同意します（<a href="<?php echo esc_url(home_url('/privacy-policy/')); ?>">プライバシーポリシー</a>）<span class="required">*</span></span>
                             </label>
-                            <label class="contact-field contact-field--privacy">
-                                <input type="checkbox" name="consent_third_party" value="1" required>
-                                <span>条件に合う施設・医療介護関係者への情報提供（第三者提供）に同意します<span class="required">*</span></span>
+                            <label class="contact-field contact-field--privacy contact-field--general-consent js-consent-general">
+                                <input type="checkbox" name="consent_general" value="1" required>
+                                <span>営業・広告宣伝・採用・システム販売等を目的とした送信はお断りします（<a href="<?php echo esc_url($business_policy_url); ?>">法人営業等の送信条件</a>）<span class="required">*</span></span>
                             </label>
                             <input class="contact-form__honeypot" type="text" name="website" tabindex="-1" autocomplete="off">
                             <input type="hidden" name="source_url" value="">
