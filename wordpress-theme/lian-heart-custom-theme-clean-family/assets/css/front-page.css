@@ -1749,6 +1749,13 @@ body.ui-state-nav-opened .hamburger-btn span:nth-child(3) {
         z-index: 120;
         display: flex;
         gap: 0;
+        transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+
+    .floating-btns.is-hidden-on-contact {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(100%);
     }
 
     .floating-btns__item {
@@ -2441,11 +2448,12 @@ body.ui-state-nav-opened .hamburger-btn span:nth-child(3) {
 
 #contact .contact__body {
     display: block;
-    margin-top: 48px;
+    max-width: 760px;
+    margin: 48px auto 0;
 }
 
 #contact .contact-lead-block {
-    padding: 0;
+    display: none;
 }
 
 #contact .contact-lead-block h3 {
@@ -2455,7 +2463,7 @@ body.ui-state-nav-opened .hamburger-btn span:nth-child(3) {
 
 #contact .contact-form-block {
     max-width: none;
-    margin-top: 28px;
+    margin-top: 0;
     margin-left: 0;
 }
 
@@ -2967,16 +2975,14 @@ body.ui-state-nav-opened .hamburger-btn span:nth-child(3) {
     }
 
     #contact .constrained-content {
-        width: min(934.35px, calc(100% - 72px));
-        max-width: 934.35px;
+        width: min(980px, calc(100% - 72px));
+        max-width: 980px;
     }
 
     #contact .contact__body {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-        justify-content: initial;
-        gap: clamp(48px, 5.2vw, 78px);
-        margin-top: 56px;
+        display: block;
+        max-width: 760px;
+        margin: 56px auto 0;
     }
 
     #contact .contact-lead-block h3 {

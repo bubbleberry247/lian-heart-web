@@ -236,6 +236,37 @@
         });
     }
 
+    function initFloatingButtons() {
+        var floating = document.querySelector('.floating-btns');
+        var contact = document.getElementById('contact');
+
+        if (!floating || !contact) {
+            return;
+        }
+
+        function setHidden(hidden) {
+            floating.classList.toggle('is-hidden-on-contact', hidden);
+        }
+
+        if ('IntersectionObserver' in window) {
+            new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    setHidden(entry.isIntersecting);
+                });
+            }, { rootMargin: '-18% 0px -18% 0px', threshold: 0.01 }).observe(contact);
+            return;
+        }
+
+        function updateVisibility() {
+            var rect = contact.getBoundingClientRect();
+            setHidden(rect.top < window.innerHeight && rect.bottom > 0);
+        }
+
+        window.addEventListener('scroll', updateVisibility, { passive: true });
+        window.addEventListener('resize', updateVisibility);
+        updateVisibility();
+    }
+
     function globalHeadlineAnimation() {
         Array.prototype.forEach.call(document.querySelectorAll('.js-headline-fx'), function (headline) {
             splitHeadlineLabel(headline.querySelector('.wp-headline__alphabetic'));
@@ -431,6 +462,7 @@
         initNav();
         initScrollIndicator();
         initPageTop();
+        initFloatingButtons();
     });
 
     onWindowLoad(function () {

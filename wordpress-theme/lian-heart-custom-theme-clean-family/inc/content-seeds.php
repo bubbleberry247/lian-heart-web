@@ -3,7 +3,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('LH_CONTENT_SEEDS_VERSION', '5');
+define('LH_CONTENT_SEEDS_VERSION', '6');
 
 function lh_content_seed_manifest() {
     $manifest_path = get_template_directory() . '/content-seeds/manifest.json';

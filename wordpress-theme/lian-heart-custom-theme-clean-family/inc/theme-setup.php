@@ -1592,3 +1592,49 @@ add_action('template_redirect', function () {
     echo lh_render_llms_txt();
     exit;
 }, 0);
+
+function lh_is_business_policy_request() {
+    $request_path = wp_parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
+    $target_path = wp_parse_url(home_url('/business-proposal-policy/'), PHP_URL_PATH);
+
+    return rtrim((string) $request_path, '/') === rtrim((string) $target_path, '/');
+}
+
+function lh_render_business_policy_fallback() {
+    if (is_admin() || !lh_is_business_policy_request()) {
+        return;
+    }
+
+    $html_path = get_template_directory() . '/content-seeds/business-proposal-policy.html';
+    if (!file_exists($html_path)) {
+        return;
+    }
+
+    $content = file_get_contents($html_path);
+    if (!is_string($content) || trim($content) === '') {
+        return;
+    }
+
+    add_filter('document_title_parts', function ($title) {
+        $title['title'] = '法人営業・広告等の送信条件';
+        return $title;
+    }, 99);
+
+    status_header(200);
+    get_header();
+    ?>
+    <main class="site-main">
+        <section class="section">
+            <div class="constrained-content">
+                <h1>法人営業・広告等の送信条件</h1>
+                <div class="entry-content">
+                    <?php echo wp_kses_post($content); ?>
+                </div>
+            </div>
+        </section>
+    </main>
+    <?php
+    get_footer();
+    exit;
+}
+add_action('template_redirect', 'lh_render_business_policy_fallback', 0);

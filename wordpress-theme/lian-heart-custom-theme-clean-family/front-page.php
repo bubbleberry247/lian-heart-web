@@ -20,7 +20,11 @@ $qa = $theme['qa'];
 $facility = $theme['facility'];
 $company = $theme['company'];
 $contact = $theme['contact'];
-$section_ctas = array_slice($hero['ctas'], 0, 2);
+$business_policy_url = home_url('/business-proposal-policy/');
+$contact_catch = trim((string) ($contact['catch'] ?? ''));
+if ($contact_catch === '' || $contact_catch === '相談・見学調整・ご紹介はすべて無料です。') {
+    $contact_catch = 'ご本人・ご親族の相談・見学調整・ご紹介は無料です。';
+}
 $concept_title = (string) ($concept['title'] ?? '');
 if (strpos($concept_title, "\n") === false && strpos($concept_title, '納得できる老人ホーム紹介を。') !== false) {
     $concept_title = str_replace(
@@ -464,49 +468,28 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
     <section class="section contact" id="contact">
         <div class="constrained-content">
             <?php echo lh_render_headline($contact['en_label'], $contact['title'], array('section', 'contact')); ?>
-            <p class="contact-catch"><?php echo esc_html($contact['catch']); ?></p>
+            <p class="contact-catch"><?php echo esc_html($contact_catch); ?></p>
             <div class="contact__body">
-                <div class="contact-lead-block">
-                    <h3><?php echo esc_html($contact['lead_title']); ?></h3>
-                    <div class="contact-lead-block__text">
-                        <?php
-                        foreach ($contact['lead_body'] as $paragraph) {
-                            $text = is_array($paragraph) ? ($paragraph['text'] ?? '') : $paragraph;
-                            if ($text === '') {
-                                continue;
-                            }
-                            echo '<p>' . esc_html($text) . '</p>';
-                        }
-                        ?>
-                    </div>
-                    <?php if (!empty($section_ctas)) : ?>
-                        <div class="section-actions">
-                            <?php foreach ($section_ctas as $cta) : ?>
-                                <?php echo lh_render_button($cta, 'section-actions__item'); ?>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php endif; ?>
-                    <?php if (!empty($contact['notes'])) : ?>
-                        <ul class="contact-note-list">
-                            <?php foreach ($contact['notes'] as $note) : ?>
-                                <?php $text = is_array($note) ? ($note['text'] ?? '') : $note; ?>
-                                <?php if ($text === '') { continue; } ?>
-                                <li><?php echo esc_html($text); ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php endif; ?>
-                </div>
                 <div class="contact-form-block">
                     <div class="contact-form-block__inner">
                         <h3 class="contact-form-block__title"><?php echo esc_html($contact['form_title']); ?></h3>
+                        <p class="contact-form-block__lead">メールで気軽にご相談ください。お急ぎの場合はお電話での入居相談も承っています。</p>
                         <div class="contact-form-success" hidden>
                             <h4><?php echo esc_html($contact['success_title']); ?></h4>
                             <p><?php echo esc_html($contact['success_body']); ?></p>
                         </div>
                         <form class="contact-form js-contact-form" novalidate>
-                            <div class="contact-form__disclosure">
-                                <p>※ご相談者さまから料金はいただきません。ご入居が決まった場合に施設から紹介手数料を受け取る場合があります（<a href="<?php echo esc_url(home_url('/fees-disclosure/')); ?>">手数料の開示</a>）。当社がすべての施設を紹介できるわけではありません（<a href="<?php echo esc_url(home_url('/fees-disclosure/')); ?>">紹介範囲について</a>）。ご相談内容は施設への打診に必要な範囲で利用します（<a href="<?php echo esc_url(home_url('/privacy-policy/')); ?>">個人情報の取り扱い</a>）。</p>
-                                <p>ご本人以外（ご家族等）がご相談される場合、ご本人の状況をご家族から伺います。</p>
+                            <input type="hidden" name="category" value="admission_inquiry">
+                            <div class="contact-form__guidance">
+                                <h4>ご相談前にご確認ください</h4>
+                                <ul>
+                                    <li>ご本人・ご親族の入居相談、見学調整、ご紹介は無料です。</li>
+                                    <li>ご相談内容を確認のうえ、2〜3営業日内を目安にご返信します。</li>
+                                    <li>ご本人以外（ご家族等）がご相談される場合、ご本人の状況をご家族から伺います。</li>
+                                    <li>病院・ケアマネジャー等からのご紹介も、入居相談として送信してください。</li>
+                                </ul>
+                                <p>ご入居が決まった場合に施設から紹介手数料を受け取る場合があります（<a href="<?php echo esc_url(home_url('/fees-disclosure/')); ?>">手数料の開示</a>）。当社がすべての施設を紹介できるわけではありません（<a href="<?php echo esc_url(home_url('/fees-disclosure/')); ?>">紹介範囲について</a>）。ご相談内容は施設への打診に必要な範囲で利用します（<a href="<?php echo esc_url(home_url('/privacy-policy/')); ?>">個人情報の取り扱い</a>）。</p>
+                                <p>法人営業・広告・採用・システム販売等の営業目的の送信はご遠慮ください。営業目的の送信が確認された場合、内容確認・記録保全等の事務対応費について、当社より請求書をお送りします（<a href="<?php echo esc_url($business_policy_url); ?>">法人営業等の送信条件</a>）。</p>
                             </div>
                             <div class="contact-form__grid">
                                 <label class="contact-field">
@@ -518,14 +501,19 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
                                     <input type="email" name="email" placeholder="メールアドレスをご入力ください。" required>
                                 </label>
                                 <label class="contact-field">
-                                    <span>電話番号<span class="required">*</span></span>
-                                    <input type="tel" name="phone" inputmode="tel" required>
+                                    <span>電話番号<span class="optional">任意</span></span>
+                                    <input type="tel" name="phone" inputmode="tel">
+                                    <small class="contact-field__hint">お急ぎの場合は、電話番号をご入力いただくと早くご連絡しやすくなります。メールが届かない場合のご連絡にも使用します。</small>
                                 </label>
                                 <label class="contact-field contact-field--full">
                                     <span>お問い合わせ内容<span class="required">*</span></span>
                                     <textarea name="message" rows="8" placeholder="お問い合わせ内容をご記入ください。" required></textarea>
                                 </label>
                             </div>
+                            <label class="contact-field contact-field--privacy contact-field--general-consent js-consent-general">
+                                <input type="checkbox" name="consent_general" value="1" required>
+                                <span>ご確認事項を確認し、この送信は入居相談・お問い合わせであり、営業・広告・採用・システム販売等を目的とした送信ではありません<span class="required">*</span></span>
+                            </label>
                             <?php
                             $privacy_company_name = $brand['site_name'] ?? 'リアンハート';
                             $privacy_address = '';
@@ -557,6 +545,7 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
                                     <p>当社は、入居相談、お問い合わせ、見学調整その他のご相談対応にあたり、お名前、電話番号、メールアドレス、お問い合わせ内容その他ご相談に必要な情報を取得することがあります。</p>
                                     <p>2. 利用目的</p>
                                     <p>取得した個人情報は、老人ホーム紹介、介護施設紹介、入居相談への対応、施設候補のご案内、見学日程の調整、比較検討のサポート、本人確認、ご相談内容への回答、ご連絡、サービス品質向上のための確認および改善のために利用します。</p>
+                                    <p>また、法人営業・広告・採用・システム販売等の送信については、用件区分、同意記録、ポリシーバージョン、送信日時、IPアドレス、ユーザーエージェント、送信元URL等を、営業判定、送信記録の保全、請求対象確認、不正送信対策、紛争防止のために利用します。</p>
                                     <p>3. 第三者提供について</p>
                                     <p>当社は、法令に基づく場合を除き、ご本人またはご家族の同意なく個人情報を第三者へ提供しません。ただし、見学調整や受入可否確認など、ご相談対応に必要な範囲で、候補施設や関係事業者へ情報を共有する場合があります。</p>
                                     <p>4. 安全管理措置</p>
@@ -585,6 +574,7 @@ $concept_title_lines = array_values(array_filter(array_map('trim', preg_split('/
                             </label>
                             <input class="contact-form__honeypot" type="text" name="website" tabindex="-1" autocomplete="off">
                             <input type="hidden" name="source_url" value="">
+                            <input type="hidden" name="policy_version" value="business-policy-2026-06-15">
                             <div class="contact-form__actions">
                                 <div class="form-status" aria-live="polite"></div>
                                 <div class="contact-form__submit-wrap">

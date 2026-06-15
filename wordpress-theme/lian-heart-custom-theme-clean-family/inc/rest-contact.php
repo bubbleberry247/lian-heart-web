@@ -3,6 +3,17 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+function lh_contact_policy_version() {
+    return 'business-policy-2026-06-15';
+}
+
+function lh_contact_category_options() {
+    return array(
+        'admission_inquiry' => 'ご本人・ご親族の入居相談',
+        'business_proposal' => '法人営業・広告等の送信（有料確認対象）',
+    );
+}
+
 function lh_contact_recipient_emails() {
     $contact = lh_get_option_group('contact');
     $emails  = array();
@@ -23,23 +34,33 @@ function lh_contact_recipient_emails() {
 function lh_contact_mail_subject(array $payload) {
     $site_name = wp_specialchars_decode(get_bloginfo('name'), ENT_QUOTES);
     $name      = $payload['name'] !== '' ? $payload['name'] : 'お名前未入力';
+    $prefix    = $payload['category'] === 'business_proposal' ? '[法人営業]' : '[入居相談]';
 
-    return sprintf('【%s】入居相談フォーム送信 - %s', $site_name, $name);
+    return sprintf('【%s】%s フォーム送信 - %s', $site_name, $prefix, $name);
 }
 
 function lh_contact_mail_body(array $payload) {
     $lines = array(
-        '入居相談フォームから送信がありました。',
+        'お問い合わせフォームから送信がありました。',
         '',
+        '送信ID: ' . $payload['submission_id'],
         '送信日時: ' . $payload['submitted_at'],
+        '用件: ' . $payload['category_label'] . '（' . $payload['category'] . '）',
         'お名前: ' . $payload['name'],
         'メールアドレス: ' . $payload['email'],
         '電話番号: ' . $payload['phone'],
+        '',
+        '同意・証跡:',
         'プライバシーポリシー同意: ' . ($payload['privacy'] === '1' ? '同意済み' : '未同意'),
         '個人情報の取得・利用同意: ' . (($payload['consent_privacy'] ?? '') === '1' ? '同意済み' : '未同意'),
         '第三者提供同意: ' . (($payload['consent_third_party'] ?? '') === '1' ? '同意済み' : '未同意'),
-        '送信元URL: ' . $payload['source_url'],
+        '一般確認同意: ' . (($payload['consent_general'] ?? '') === '1' ? '同意済み' : '未同意'),
+        '法人営業等の送信条件同意: ' . (($payload['consent_business'] ?? '') === '1' ? '同意済み' : '未同意'),
+        '法人代表・代理権限確認: ' . (($payload['consent_business_authority'] ?? '') === '1' ? '同意済み' : '未同意'),
+        'ポリシーバージョン: ' . $payload['policy_version'],
+        'IPアドレス: ' . $payload['ip_address'],
         'ユーザーエージェント: ' . $payload['user_agent'],
+        '送信元URL: ' . $payload['source_url'],
         '',
         'お問い合わせ内容:',
         $payload['message'] !== '' ? $payload['message'] : '（未入力）',
@@ -90,31 +111,75 @@ function lh_handle_contact_submission(WP_REST_Request $request) {
 
     set_transient($rate_key, $attempts + 1, 60);
 
+    $categories = lh_contact_category_options();
+    $category   = sanitize_key($params['category'] ?? '');
+
     $payload = array(
-        'name'                => sanitize_text_field($params['name'] ?? ''),
-        'email'               => sanitize_email($params['email'] ?? ''),
-        'phone'               => sanitize_text_field($params['phone'] ?? ''),
-        'message'             => sanitize_textarea_field($params['message'] ?? ''),
-        'privacy'             => !empty($params['privacy']) ? '1' : '0',
-        'consent_privacy'     => (isset($params['consent_privacy']) && (string) $params['consent_privacy'] === '1') ? '1' : '0',
-        'consent_third_party' => (isset($params['consent_third_party']) && (string) $params['consent_third_party'] === '1') ? '1' : '0',
-        'source_url'          => esc_url_raw($params['source_url'] ?? home_url('/')),
-        'user_agent'          => sanitize_text_field($request->get_header('user_agent')),
-        'submitted_at'        => current_time('c'),
+        'submission_id'              => $submission_id,
+        'category'                   => $category,
+        'category_label'             => $categories[$category] ?? '',
+        'name'                       => sanitize_text_field($params['name'] ?? ''),
+        'email'                      => sanitize_email($params['email'] ?? ''),
+        'phone'                      => sanitize_text_field($params['phone'] ?? ''),
+        'message'                    => sanitize_textarea_field($params['message'] ?? ''),
+        'privacy'                    => !empty($params['privacy']) ? '1' : '0',
+        'consent_privacy'            => (isset($params['consent_privacy']) && (string) $params['consent_privacy'] === '1') ? '1' : '0',
+        'consent_third_party'        => (isset($params['consent_third_party']) && (string) $params['consent_third_party'] === '1') ? '1' : '0',
+        'consent_general'            => (isset($params['consent_general']) && (string) $params['consent_general'] === '1') ? '1' : '0',
+        'consent_business'           => (isset($params['consent_business']) && (string) $params['consent_business'] === '1') ? '1' : '0',
+        'consent_business_authority' => (isset($params['consent_business_authority']) && (string) $params['consent_business_authority'] === '1') ? '1' : '0',
+        'policy_version'             => sanitize_text_field($params['policy_version'] ?? ''),
+        'source_url'                 => esc_url_raw($params['source_url'] ?? home_url('/')),
+        'ip_address'                 => sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'] ?? '')),
+        'user_agent'                 => sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'] ?? $request->get_header('user_agent'))),
+        'submitted_at'               => current_time('c'),
     );
 
+    $is_business = $payload['category'] === 'business_proposal';
+
     if (
+        $payload['category'] === '' ||
+        !isset($categories[$payload['category']]) ||
         $payload['name'] === '' ||
         $payload['email'] === '' ||
         !is_email($payload['email']) ||
-        $payload['phone'] === '' ||
         $payload['message'] === '' ||
-        $payload['privacy'] !== '1'
+        $payload['privacy'] !== '1' ||
+        $payload['policy_version'] !== lh_contact_policy_version()
     ) {
         error_log(sprintf('[LH Contact] REJECT id=%s reason=validation_failed', $submission_id));
         return new WP_Error(
             'lh_invalid_contact',
             '必須項目を確認してください。',
+            array('status' => 400)
+        );
+    }
+
+    if (!$is_business && $payload['consent_general'] !== '1') {
+        error_log(sprintf('[LH Contact] REJECT id=%s reason=general_consent_missing category=%s', $submission_id, $payload['category']));
+        return new WP_Error(
+            'lh_invalid_general_consent',
+            '入居相談としての送信確認に同意してください。',
+            array('status' => 400)
+        );
+    }
+
+    if (
+        $is_business &&
+        (
+            $payload['consent_business'] !== '1' ||
+            $payload['consent_business_authority'] !== '1'
+        )
+    ) {
+        error_log(sprintf(
+            '[LH Contact] REJECT id=%s reason=business_consent_missing policy=%s authority=%s',
+            $submission_id,
+            $payload['consent_business'],
+            $payload['consent_business_authority']
+        ));
+        return new WP_Error(
+            'lh_invalid_business_consent',
+            'このフォームでは営業・広告等を目的とした送信を受け付けていません。',
             array('status' => 400)
         );
     }
