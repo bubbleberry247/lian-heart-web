@@ -1569,6 +1569,8 @@ function lh_render_llms_txt() {
     $lines[] = '## 主要ページ';
     $lines[] = '- [トップページ](' . $home . '/): サービス概要・相談からご紹介までの流れ・よくあるご質問';
     $lines[] = '- [医療・介護関係者の方へ](' . lh_get_referrer_page_url() . '): ご紹介前の方針と相談からご紹介までの流れ';
+    $lines[] = '- [ご相談が無料の理由と手数料の開示](' . $home . '/fees-disclosure/): 相談無料の仕組み、紹介手数料、紹介範囲の開示';
+    $lines[] = '- [プライバシーポリシー](' . $home . '/privacy-policy/): 入居相談で扱う個人情報・要配慮個人情報の取り扱い';
     $lines[] = '';
     $lines[] = '## 知識記事';
     foreach ($articles as $a) {
@@ -1593,19 +1595,54 @@ add_action('template_redirect', function () {
     exit;
 }, 0);
 
-function lh_is_business_policy_request() {
-    $request_path = wp_parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
-    $target_path = wp_parse_url(home_url('/business-proposal-policy/'), PHP_URL_PATH);
-
-    return rtrim((string) $request_path, '/') === rtrim((string) $target_path, '/');
+function lh_static_policy_page_definitions() {
+    return array(
+        'fees-disclosure' => array(
+            'title' => 'ご相談が無料の理由と手数料の開示',
+            'file' => 'fees-disclosure.html',
+        ),
+        'privacy-policy' => array(
+            'title' => 'プライバシーポリシー',
+            'file' => 'privacy-policy.html',
+        ),
+        'business-proposal-policy' => array(
+            'title' => '法人営業・広告等の送信条件',
+            'file' => 'business-proposal-policy.html',
+        ),
+    );
 }
 
-function lh_render_business_policy_fallback() {
-    if (is_admin() || !lh_is_business_policy_request()) {
+function lh_get_static_policy_page_request() {
+    $request_path = wp_parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
+    $request_path = rtrim((string) $request_path, '/');
+
+    foreach (lh_static_policy_page_definitions() as $slug => $definition) {
+        $target_path = wp_parse_url(home_url('/' . trim((string) $slug, '/') . '/'), PHP_URL_PATH);
+        if ($request_path === rtrim((string) $target_path, '/')) {
+            $definition['slug'] = $slug;
+            return $definition;
+        }
+    }
+
+    return null;
+}
+
+function lh_render_static_policy_page_fallback() {
+    if (is_admin()) {
         return;
     }
 
-    $html_path = get_template_directory() . '/content-seeds/business-proposal-policy.html';
+    $definition = lh_get_static_policy_page_request();
+    if (!is_array($definition)) {
+        return;
+    }
+
+    $file = basename((string) ($definition['file'] ?? ''));
+    if ($file === '') {
+        return;
+    }
+
+    $html_path = trailingslashit(get_template_directory()) . 'content-seeds/' . $file;
     if (!file_exists($html_path)) {
         return;
     }
@@ -1615,18 +1652,24 @@ function lh_render_business_policy_fallback() {
         return;
     }
 
-    add_filter('document_title_parts', function ($title) {
-        $title['title'] = '法人営業・広告等の送信条件';
+    add_filter('document_title_parts', function ($title) use ($definition) {
+        $title['title'] = (string) ($definition['title'] ?? '');
         return $title;
     }, 99);
 
+    global $wp_query;
+    if ($wp_query instanceof WP_Query) {
+        $wp_query->is_404 = false;
+    }
+
     status_header(200);
+    nocache_headers();
     get_header();
     ?>
     <main class="site-main">
         <section class="section">
             <div class="constrained-content">
-                <h1>法人営業・広告等の送信条件</h1>
+                <h1><?php echo esc_html((string) ($definition['title'] ?? '')); ?></h1>
                 <div class="entry-content">
                     <?php echo wp_kses_post($content); ?>
                 </div>
@@ -1637,4 +1680,4 @@ function lh_render_business_policy_fallback() {
     get_footer();
     exit;
 }
-add_action('template_redirect', 'lh_render_business_policy_fallback', 0);
+add_action('template_redirect', 'lh_render_static_policy_page_fallback', 0);

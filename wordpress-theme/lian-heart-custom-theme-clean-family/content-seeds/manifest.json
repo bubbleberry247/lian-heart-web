@@ -214,10 +214,12 @@
   "fees-disclosure": {
     "type": "page",
     "title": "ご相談が無料の理由と手数料の開示",
-    "lead": "ご相談者から料金はいただきません。ご入居が決まった場合に、施設側から紹介手数料を受け取る事業モデルだからです。",
+    "lead": "ご本人・ご家族の入居相談は無料です。施設側から紹介手数料を受け取る場合があること、紹介範囲に限界があること、広告との区別を開示します。",
     "sources": [
       "高齢者住まい事業者団体連合会（高住連）「紹介事業者届出公表制度」｜https://koujuren.jp/todokede/",
-      "公益社団法人全国有料老人ホーム協会「有料老人ホーム設置運営標準指導指針の改正について」（2024年12月9日）｜https://www.yurokyo.or.jp/info/view/5622"
+      "厚生労働省「有料老人ホームの設置運営標準指導指針について」｜https://www.mhlw.go.jp/content/001347957.pdf",
+      "公益社団法人全国有料老人ホーム協会「有料老人ホーム設置運営標準指導指針の改正について」（2024年12月9日）｜https://www.yurokyo.or.jp/contents/view/5622",
+      "消費者庁「優良誤認とは」｜https://www.caa.go.jp/policies/policy/representation/fair_labeling/representation_regulation/misleading_representation"
     ]
   },
   "consultation-policy": {
@@ -237,8 +239,10 @@
   "privacy-policy": {
     "type": "page",
     "title": "プライバシーポリシー",
-    "lead": "要配慮個人情報を扱う相談フォームの法的前提として、個人情報の取得・利用・第三者提供の方針を定めるページです。",
+    "lead": "入居相談で扱う要配慮個人情報について、取得する情報、利用目的、施設等への第三者提供、保管・削除、同意撤回の方法を定めるページです。",
     "sources": [
+      "個人情報保護委員会「個人情報の保護に関する法律についてのガイドライン（通則編）」｜https://www.ppc.go.jp/personalinfo/legal/guidelines_tsusoku/",
+      "政府広報オンライン「個人情報保護法を分かりやすく解説」｜https://www.gov-online.go.jp/article/201703/entry-7660.html",
       "高齢者住まい事業者団体連合会（高住連）「紹介事業者届出公表制度」｜https://koujuren.jp/todokede/"
     ]
   }
