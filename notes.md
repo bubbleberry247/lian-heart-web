@@ -42,6 +42,10 @@ AEO/GEOコンテンツ（4+1ハブ＝記事12本＋信頼基盤4ページ）を�
 5. knowledge-after-discharge（退院ピラー）の改稿は公開時に手動貼替（content-seeds/knowledge-after-discharge.html）
 6. **次回デプロイ時に inc/content-seeds.php の最新版＋content-seeds/*.html改訂版を含める**: 是正ブロック撤去＋失敗時バージョン非更新＋決定事項反映版シード。本番は旧版だがdraft運用のため実害なし（急ぎではない）
 
+## メンテ注意点（2026-06-15・フォーム法人営業対応で追加）
+- **rest-contact.php の `policy_version` 厳密一致チェック（`!== lh_contact_policy_version()`）**: 同意した正確なポリシー版をピン留めする意図的設計（証跡用）。ただし将来ポリシー版を更新すると、ブラウザにキャッシュされた旧フォームHTMLは即400になる。公開前は実害なし（在野の旧フォームなし）。**公開後にポリシー改定する際は、フロント再キャッシュ前提を周知するか、版チェックを「存在すれば記録・不一致でも受理」に緩める判断を検討**
+- フォームは「入居相談専用」設計（category=admission_inquiry固定）。法人営業の送信に対しては、規約ページ（business-proposal-policy）＋証跡（IP/UA/policy_version）＋課金根拠文言で対処する設計＝categoryで弾く設計ではない（意図的）
+
 ## セキュリティTODO（自動レビュー指摘・2026-06-12）
 - **deploy/push-theme-via-sftp.ps1 と deploy/tmp-lftp-*.txt の `set ssl:verify-certificate no`（TLS検証無効）**: 3月からの既存設定。MITMでFTP認証情報が窃取されるリスク。次回デプロイ時に (1)`verify-certificate no` を外して接続テスト（Xserver FTPSは通常正規証明書。失敗ならCygwinのCAバンドルを `ssl:ca-file` で指定） (2)可能なら ftp:// → sftp://（SSH）+ known_hosts へ移行。**動作中の経路なので未テストで書き換えない**
 - FTPアカウント `codexpublic` は一時用途（認証情報は deploy/tmp-lftp-upload.txt ※git管理外）。**公開切替の前にパスワードローテーション推奨**
